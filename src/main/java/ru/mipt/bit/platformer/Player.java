@@ -26,8 +26,6 @@ import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.incrementedX;
 
 public class Player {
-    private final TextureRegion graphics;
-    private final Rectangle rectangle;
     // player current position coordinates on level 10x8 grid (e.g. x=0, y=1)
     private GridPoint2 coordinates;
     // which tile the player want to go next
@@ -36,9 +34,7 @@ public class Player {
     private float rotation;
     private final HashMap<Direction, Float> rotates;
 
-    Player(Texture blueTankTexture) {
-        this.graphics = new TextureRegion(blueTankTexture);
-        this.rectangle = createBoundingRectangle(this.graphics);
+    Player() {
         this.destinationCoordinates = new GridPoint2(1, 1);
         this.coordinates = new GridPoint2(this.destinationCoordinates);
         this.rotation = 0f;
@@ -49,12 +45,6 @@ public class Player {
         rotates.put(Direction.Right, 0f);
     }
 
-    TextureRegion getGraphics() {
-        return this.graphics;
-    }
-    Rectangle getRectangle() {
-        return this.rectangle;
-    }
     GridPoint2 getCoordinates() {
         return this.coordinates;
     }
@@ -114,12 +104,11 @@ public class Player {
     }
 
     void movePlayer(GridPoint2 obstacleCoordinates) {
-        Direction direction = Direction.Default;
-        direction = direction.getDirectionFromKey();
-        if (direction == Direction.Default) { //no key is pressed
+        ControlPanel controlPanel = new ControlPanel();
+        if (!controlPanel.ifPressedKey()) {
             return;
         }
-
+        Direction direction = controlPanel.getDirectionFromKey();
         GridPoint2[] newCoordinates = getNewCoordinates(direction);
         GridPoint2 newPosition =  newCoordinates[0];
         GridPoint2 newDestinationCoordinates =  newCoordinates[1];
@@ -130,7 +119,6 @@ public class Player {
             }
             changeRotation(direction);
         }
-
     }
 
     void changeMovementProgress(float deltaTime, float speed) {

@@ -34,6 +34,7 @@ public class GameDesktopLauncher implements ApplicationListener {
 
     private Texture blueTankTexture;
     private Player player;
+    private PlayerGraphics playerGraphics;
     private Texture greenTreeTexture;
     private TextureRegion treeObstacleGraphics;
     private GridPoint2 treeObstacleCoordinates = new GridPoint2();
@@ -52,7 +53,8 @@ public class GameDesktopLauncher implements ApplicationListener {
         // Texture decodes an image file and loads it into GPU memory, it represents a native resource
         blueTankTexture = new Texture("images/tank_blue.png");
         // TextureRegion represents Texture portion, there may be many TextureRegion instances of the same Texture
-        player = new Player(blueTankTexture);
+        player = new Player();
+        playerGraphics = new PlayerGraphics(blueTankTexture);
         greenTreeTexture = new Texture("images/greenTree.png");
         treeObstacleGraphics = new TextureRegion(greenTreeTexture);
         treeObstacleCoordinates = new GridPoint2(1, 3);
@@ -72,7 +74,7 @@ public class GameDesktopLauncher implements ApplicationListener {
         player.movePlayer(treeObstacleCoordinates);
 
         // calculate interpolated player screen coordinates
-        tileMovement.moveRectangleBetweenTileCenters(player.getRectangle(), player.getCoordinates(), player.getDestinationCoordinates(), player.getMovementProgress());
+        tileMovement.moveRectangleBetweenTileCenters(playerGraphics.getRectangle(), player.getCoordinates(), player.getDestinationCoordinates(), player.getMovementProgress());
 
         //player.movementProgress = continueProgress(player.movementProgress, deltaTime, MOVEMENT_SPEED);
         player.changeMovementProgress(deltaTime, MOVEMENT_SPEED);
@@ -87,7 +89,7 @@ public class GameDesktopLauncher implements ApplicationListener {
         batch.begin();
 
         // render player
-        drawTextureRegionUnscaled(batch, player.getGraphics(), player.getRectangle(), player.getRotation());
+        drawTextureRegionUnscaled(batch, playerGraphics.getGraphics(), playerGraphics.getRectangle(), player.getRotation());
 
         // render tree obstacle
         drawTextureRegionUnscaled(batch, treeObstacleGraphics, treeObstacleRectangle, 0f);
