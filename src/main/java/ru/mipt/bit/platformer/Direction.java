@@ -1,6 +1,6 @@
 package ru.mipt.bit.platformer;
 
-enum Direction {
+public enum Direction {
     Up,
     Down,
     Left,
