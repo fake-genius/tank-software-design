@@ -108,4 +108,12 @@ public class Player {
         return MOVEMENT_SPEED;
     }
 
+    public void setCoordinates(GridPoint2 coordinates) {
+        this.coordinates = coordinates;
+    }
+
+    public void setDestinationCoordinates(GridPoint2 coordinates) {
+        this.destinationCoordinates = coordinates;
+    }
+
 }
