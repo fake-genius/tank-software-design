@@ -60,8 +60,6 @@ public class FileReader {
                 y -= 1;
                 x = 0;
             }
-            else
-                i += 1;
             i += 1;
         }
         objectsCoordinates.put(playerCoords, GameObjectType.PLAYER);

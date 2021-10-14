@@ -42,7 +42,6 @@ public class ObstaclesGenerator {
                 randomHeight = generateNumber(0, height);
                 coords = new GridPoint2(randomWidth, randomHeight);
             }
-            System.out.println("generated obstacle at:" + coords);
             takenPoints.add(coords);
             obstacles.add(new TreeObstacle(coords));
         }
