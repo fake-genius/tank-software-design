@@ -25,22 +25,25 @@ public class FileReader {
 
     public ArrayList<GameObject> getGameObjectsFromFile(String filePath) {
         String fileData = readFromFileToString(filePath);
-        HashMap<GridPoint2, GameObjectType> objectsCoordinates = getObjectsCoordinates(fileData);
+        ArrayList<HashMap<GridPoint2, GameObjectType>> objectsCoordinates = getObjectsCoordinates(fileData);
         ArrayList<GameObject> gameObjects = new ArrayList<>();
-        for (var obj : objectsCoordinates.entrySet()) {
-            gameObjects.add(obj.getValue().getObject(obj.getKey()));
+        for (var objects : objectsCoordinates) {
+            for (var obj : objects.entrySet()) {
+                gameObjects.add(obj.getValue().getObject(obj.getKey()));
+            }
         }
         return gameObjects;
     }
 
-    public HashMap<GridPoint2, GameObjectType> getObjectsCoordinates(String fileContent) {
+    public ArrayList<HashMap<GridPoint2, GameObjectType>> getObjectsCoordinates(String fileContent) {
         // предполагается, что в файле нет лишних клеток
-        HashMap<GridPoint2, GameObjectType> objectsCoordinates = new HashMap<>();
+        HashMap<GridPoint2, GameObjectType> treesCoordinates = new HashMap<>();
+        HashMap<GridPoint2, GameObjectType> playerCoordinates = new HashMap<>();
         int i = 0;
         char symbol;
         int n = fileContent.length();
         int x = 0, y = height - 1;
-        GridPoint2 coords, playerCoords = new GridPoint2(1, 1);
+        GridPoint2 coords, playerCoords;
         while (i < n) {
             symbol = fileContent.charAt(i);
             if (symbol == '_') {
@@ -48,12 +51,12 @@ public class FileReader {
             }
             else if (symbol == 'T') {
                 coords = new GridPoint2(x, y);
-                objectsCoordinates.put(coords, GameObjectType.TREE);
+                treesCoordinates.put(coords, GameObjectType.TREE);
                 x += 1;
             }
             else if (symbol == 'X') {
                 playerCoords = new GridPoint2(x, y);
-                //objectsCoordinates.put(coords, GameObjectType.PLAYER);
+                playerCoordinates.put(playerCoords, GameObjectType.PLAYER);
                 x += 1;
             }
             else if (symbol == '\n') {
@@ -62,7 +65,9 @@ public class FileReader {
             }
             i += 1;
         }
-        objectsCoordinates.put(playerCoords, GameObjectType.PLAYER);
-        return objectsCoordinates;
+        ArrayList<HashMap<GridPoint2, GameObjectType>> objects = new ArrayList<>();
+        objects.add(treesCoordinates);
+        objects.add(playerCoordinates);
+        return objects;
     }
 }
