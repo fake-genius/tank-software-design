@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import ru.mipt.bit.platformer.Direction;
 
 import java.util.HashMap;
+import java.util.Objects;
 
 import static com.badlogic.gdx.math.MathUtils.isEqual;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
@@ -112,4 +113,19 @@ public class Player implements GameObject {
         this.destinationCoordinates = coordinates;
     }
 
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) return false;
+        if (!(obj instanceof Player)) return false;
+        if (obj == this) return true;
+        return (((Player) obj).getCoordinates() == this.getCoordinates()
+                & ((Player) obj).getDestinationCoordinates() == this.getDestinationCoordinates()
+                & ((Player) obj).getRotation() == this.getRotation());
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(MOVEMENT_SPEED, coordinates, destinationCoordinates, movementProgress, rotation, rotates);
+    }
 }
