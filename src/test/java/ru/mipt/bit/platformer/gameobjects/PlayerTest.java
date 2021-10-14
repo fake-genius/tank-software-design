@@ -19,7 +19,7 @@ class PlayerTest {
 
     @Test
     void getNewCoordinates() {
-        Player player = new Player();
+        Player player = new Player(new GridPoint2(1, 1));
         setPlayerCoordinates(player, new GridPoint2(1, 2), new GridPoint2(2, 3));
 
         var coords = player.getNewCoordinates(Direction.Up);
@@ -41,7 +41,7 @@ class PlayerTest {
 
     @Test
     void isMovementPossible() {
-        Player player = new Player();
+        Player player = new Player(new GridPoint2(1, 1));
 
         assertTrue(player.isMovementPossible(new GridPoint2(1, 2), new GridPoint2(2, 3)));
         assertTrue(player.isMovementPossible(new GridPoint2(1, 2), new GridPoint2(1, 3)));
