@@ -42,16 +42,20 @@ public class GameDesktopLauncher implements ApplicationListener {
 
     private void getLevelFromFile() {
         FileReader fileReader = new FileReader();
-        ArrayList<GameObject> gameObjects = fileReader.getGameObjectsFromFile("level.txt");
+        ArrayList<GameObject> gameObjects = fileReader.getGameObjectsFromFile("src\\test\\resources\\test_level.txt");
         int i = 0;
-        for (; i < gameObjects.size() - 1; ++i)
-            treeObstacles.add((TreeObstacle) gameObjects.get(i));
+        treeObstacles = new ArrayList<>();
+        for (; i < gameObjects.size() - 1; ++i) {
+            TreeObstacle tree = (TreeObstacle) gameObjects.get(i);
+            treeObstacles.add(tree);
+        }
         player = (Player) gameObjects.get(i);
     }
 
     @Override
     public void create() {
         generateRandomLevel();
+        //getLevelFromFile();
 
         level = new TmxMapLoader().load("level.tmx");
         TiledMapTileLayer groundLayer = getSingleLayer(level);
