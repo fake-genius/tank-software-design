@@ -8,11 +8,16 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Interpolation;
+import ru.mipt.bit.platformer.driver.FileReader;
 import ru.mipt.bit.platformer.driver.GameDriver;
+import ru.mipt.bit.platformer.driver.ObstaclesGenerator;
+import ru.mipt.bit.platformer.gameobjects.GameObject;
 import ru.mipt.bit.platformer.gameobjects.Player;
 import ru.mipt.bit.platformer.gameobjects.TreeObstacle;
 import ru.mipt.bit.platformer.graphics.LevelRenderer;
 import ru.mipt.bit.platformer.util.TileMovement;
+
+import java.util.ArrayList;
 
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 import static com.badlogic.gdx.math.MathUtils.isEqual;
@@ -25,21 +30,35 @@ public class GameDesktopLauncher implements ApplicationListener {
     private LevelRenderer levelRenderer;
 
     private Player player;
-    private TreeObstacle treeObstacle;
+    private ArrayList<TreeObstacle> treeObstacles;
 
     private GameDriver gameDriver;
 
+    private void generateRandomLevel() {
+        ObstaclesGenerator obstaclesGenerator = new ObstaclesGenerator();
+        player = obstaclesGenerator.generatePlayer();
+        treeObstacles = obstaclesGenerator.generateObstacles(5);
+    }
+
+    private void getLevelFromFile() {
+        FileReader fileReader = new FileReader();
+        ArrayList<GameObject> gameObjects = fileReader.getGameObjectsFromFile("level.txt");
+        int i = 0;
+        for (; i < gameObjects.size() - 1; ++i)
+            treeObstacles.add((TreeObstacle) gameObjects.get(i));
+        player = (Player) gameObjects.get(i);
+    }
+
     @Override
     public void create() {
-        player = new Player();
-        treeObstacle = new TreeObstacle(new GridPoint2(1, 3));
+        generateRandomLevel();
 
         level = new TmxMapLoader().load("level.tmx");
         TiledMapTileLayer groundLayer = getSingleLayer(level);
-        levelRenderer = new LevelRenderer(level, groundLayer, player, treeObstacle);
+        levelRenderer = new LevelRenderer(level, groundLayer, player, treeObstacles);
         tileMovement = new TileMovement(groundLayer, Interpolation.smooth);
 
-        gameDriver = new GameDriver(player, treeObstacle);
+        gameDriver = new GameDriver(player, treeObstacles);
 
         levelRenderer.moveRectangleAtTileCenter();
     }
