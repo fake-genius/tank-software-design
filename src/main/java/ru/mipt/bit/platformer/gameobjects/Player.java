@@ -10,7 +10,7 @@ import static com.badlogic.gdx.math.MathUtils.isEqual;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.incrementedX;
 
-public class Player {
+public class Player implements GameObject {
     private final float MOVEMENT_SPEED = 0.4f;
 
     // player current position coordinates on level 10x8 grid (e.g. x=0, y=1)
@@ -21,8 +21,8 @@ public class Player {
     private float rotation;
     private final HashMap<Direction, Float> rotates;
 
-    public Player() {
-        this.destinationCoordinates = new GridPoint2(1, 1);
+    public Player(GridPoint2 coords) {
+        this.destinationCoordinates = new GridPoint2(coords);
         this.coordinates = new GridPoint2(this.destinationCoordinates);
         this.rotation = 0f;
         rotates = new HashMap<>();
@@ -49,13 +49,9 @@ public class Player {
         return isEqual(this.movementProgress, 1f);
     }
 
-    GridPoint2 makeNewPoint(GridPoint2 point) {
-        return new GridPoint2(point.x, point.y);
-    }
-
     public GridPoint2[] getNewCoordinates(Direction direction) {
-        GridPoint2 newPosition = makeNewPoint(this.coordinates);
-        GridPoint2 newDestinationCoordinates = makeNewPoint(this.destinationCoordinates);
+        GridPoint2 newPosition = new GridPoint2(this.coordinates);
+        GridPoint2 newDestinationCoordinates = new GridPoint2(this.destinationCoordinates);
         switch(direction) {
             case Up:
                 newPosition = incrementedY(newPosition);
@@ -82,7 +78,7 @@ public class Player {
     }
 
     public void makeMovement(GridPoint2 newDestinationCoordinates) {
-        this.destinationCoordinates = makeNewPoint(newDestinationCoordinates);
+        this.destinationCoordinates = new GridPoint2(newDestinationCoordinates);
         this.movementProgress = 0f;
     }
 
