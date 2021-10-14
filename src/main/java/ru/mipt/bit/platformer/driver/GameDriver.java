@@ -7,13 +7,15 @@ import ru.mipt.bit.platformer.Direction;
 import ru.mipt.bit.platformer.gameobjects.Player;
 import ru.mipt.bit.platformer.gameobjects.TreeObstacle;
 
-public class GameDriver {
-    private Player player;
-    private TreeObstacle treeObstacle;
+import java.util.ArrayList;
 
-    public GameDriver(Player player, TreeObstacle treeObstacle) {
+public class GameDriver {
+    private final Player player;
+    private final ArrayList<TreeObstacle> treeObstacles;
+
+    public GameDriver(Player player, ArrayList<TreeObstacle> treeObstacles) {
         this.player = player;
-        this.treeObstacle = treeObstacle;
+        this.treeObstacles = treeObstacles;
     }
 
     public void movePlayer() {
@@ -35,11 +37,19 @@ public class GameDriver {
         GridPoint2 newDestinationCoordinates = newCoordinates[1];
 
         if (player.hasMoved()) {
-            if (player.isMovementPossible(treeObstacle.getTreeObstacleCoordinates(), newPosition)) {
+            if (checkAllObstacles(newPosition)) {
                 player.makeMovement(newDestinationCoordinates);
             }
             player.changeRotation(direction);
         }
+    }
+
+    boolean checkAllObstacles(GridPoint2 newPosition) {
+        for (var tree : treeObstacles) {
+            if (!player.isMovementPossible(tree.getTreeObstacleCoordinates(), newPosition))
+                return false;
+        }
+        return true;
     }
 
     float getDeltaTime() {

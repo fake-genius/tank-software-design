@@ -14,6 +14,8 @@ import ru.mipt.bit.platformer.gameobjects.TreeObstacle;
 import ru.mipt.bit.platformer.util.GdxGameUtils;
 import ru.mipt.bit.platformer.util.TileMovement;
 
+import java.util.ArrayList;
+
 import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
@@ -21,16 +23,16 @@ public class LevelRenderer {
     private final Batch batch;
     private final MapRenderer levelRenderer;
     private final TiledMapTileLayer groundLayer;
-    private TileMovement tileMovement;
-    private Texture blueTankTexture;
-    private Texture greenTreeTexture;
+    private final TileMovement tileMovement;
+    private final Texture blueTankTexture;
+    private final Texture greenTreeTexture;
     public PlayerGraphics playerGraphics;
-    private TreeObstacleGraphics treeObstacleGraphics;
+    private final ArrayList<TreeObstacleGraphics> treeObstacleGraphics;
     
-    private Player player;
-    private TreeObstacle treeObstacle;
+    private final Player player;
+    private final ArrayList<TreeObstacle> treeObstacles;
 
-    public LevelRenderer(TiledMap level, TiledMapTileLayer groundLayer, Player player, TreeObstacle treeObstacle) {
+    public LevelRenderer(TiledMap level, TiledMapTileLayer groundLayer, Player player, ArrayList<TreeObstacle> treeObstacles) {
         this.batch = new SpriteBatch();
         this.levelRenderer = createSingleLayerMapRenderer(level, batch);
         //this.groundLayer = getSingleLayer(level);
@@ -40,10 +42,12 @@ public class LevelRenderer {
         this.blueTankTexture = new Texture("images/tank_blue.png");
         this.playerGraphics = new PlayerGraphics(blueTankTexture, this.tileMovement);
         this.greenTreeTexture = new Texture("images/greenTree.png");
-        this.treeObstacleGraphics = new TreeObstacleGraphics(greenTreeTexture, this.tileMovement);
+        this.treeObstacleGraphics = new ArrayList<>();
+        for (var tree : treeObstacles)
+            treeObstacleGraphics.add(new TreeObstacleGraphics(greenTreeTexture, this.tileMovement));
 
         this.player = player;
-        this.treeObstacle = treeObstacle;
+        this.treeObstacles = treeObstacles;
     }
 
     public TileMovement getTileMovement() {
@@ -51,7 +55,11 @@ public class LevelRenderer {
     }
 
     public void moveRectangleAtTileCenter() {
-        GdxGameUtils.moveRectangleAtTileCenter(groundLayer, treeObstacleGraphics.getRectangle(), treeObstacle.getTreeObstacleCoordinates());
+        for (int i = 0; i < treeObstacles.size(); ++i) {
+            var tree = treeObstacles.get(i);
+            var treeGraphics = treeObstacleGraphics.get(i);
+            GdxGameUtils.moveRectangleAtTileCenter(groundLayer, treeGraphics.getRectangle(), tree.getTreeObstacleCoordinates());
+        }
     }
 
     public void render() {
@@ -74,7 +82,8 @@ public class LevelRenderer {
 
     void renderObjects() {
         playerGraphics.render(batch, player.getRotation());
-        treeObstacleGraphics.render(batch, 0f);
+        for (var treeGraphics : treeObstacleGraphics)
+            treeGraphics.render(batch, 0f);
     }
 
     public void dispose() {
