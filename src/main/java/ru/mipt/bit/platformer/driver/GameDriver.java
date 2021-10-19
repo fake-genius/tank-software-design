@@ -111,7 +111,6 @@ public class GameDriver {
     boolean checkAllTanks(GridPoint2 newPosition, Tank tankToMove) {
         for (Tank tank : tanks) {
             if (tank.equals(tankToMove)) {
-                //System.out.println("here was equal");
                 continue;
             }
             if (!tankToMove.isMovementPossible(tank.getCoordinates(), newPosition) || !tankToMove.isMovementPossible(tank.getDestinationCoordinates(), newPosition))

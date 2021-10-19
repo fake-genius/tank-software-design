@@ -60,24 +60,20 @@ public class FileReader {
             symbol = fileContent.charAt(i);
             if (symbol == '_') {
                 x += 1;
-            }
-            else if (symbol == 'T') {
+            } else if (symbol == 'T') {
                 coords = new GridPoint2(x, y);
                 trees.add(new TreeObstacle(coords));
                 x += 1;
-            }
-            else if (symbol == 'X') {
+            } else if (symbol == 'X') {
                 coords = new GridPoint2(x, y);
                 playerTank.setCoordinates(coords);
                 playerTank.setDestinationCoordinates(coords);
                 x += 1;
-            }
-            else if (symbol == 'N') {
+            } else if (symbol == 'N') {
                 coords = new GridPoint2(x, y);
                 tanks.add(new Tank(coords));
                 x += 1;
-            }
-            else if (symbol == '\n') {
+            } else if (symbol == '\n') {
                 y -= 1;
                 x = 0;
             }

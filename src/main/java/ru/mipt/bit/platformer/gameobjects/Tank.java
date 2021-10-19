@@ -36,12 +36,15 @@ public class Tank implements GameObject {
     public GridPoint2 getCoordinates() {
         return this.coordinates;
     }
+
     public GridPoint2 getDestinationCoordinates() {
         return this.destinationCoordinates;
     }
+
     public float getMovementProgress() {
         return this.movementProgress;
     }
+
     public float getRotation() {
         return this.rotation;
     }
@@ -53,7 +56,7 @@ public class Tank implements GameObject {
     public GridPoint2[] getNewCoordinates(Direction direction) {
         GridPoint2 newPosition = new GridPoint2(this.coordinates);
         GridPoint2 newDestinationCoordinates = new GridPoint2(this.destinationCoordinates);
-        switch(direction) {
+        switch (direction) {
             case Up:
                 newPosition = incrementedY(newPosition);
                 newDestinationCoordinates.y++;
@@ -71,7 +74,7 @@ public class Tank implements GameObject {
                 newDestinationCoordinates.x++;
                 break;
         }
-        return new GridPoint2[] {newPosition, newDestinationCoordinates};
+        return new GridPoint2[]{newPosition, newDestinationCoordinates};
     }
 
     public boolean isMovementPossible(GridPoint2 obstacleCoordinates, GridPoint2 newPosition) {
