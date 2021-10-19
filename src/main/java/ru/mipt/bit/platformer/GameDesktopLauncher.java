@@ -36,7 +36,7 @@ public class GameDesktopLauncher implements ApplicationListener {
     private void generateRandomLevel() {
         ObstaclesGenerator obstaclesGenerator = new ObstaclesGenerator();
         playerTank = obstaclesGenerator.generatePlayer();
-        treeObstacles = obstaclesGenerator.generateObstacles(5);
+        treeObstacles = obstaclesGenerator.generateObstacles(10);
         tanks = obstaclesGenerator.generateTanks(3);
     }
 
@@ -50,8 +50,8 @@ public class GameDesktopLauncher implements ApplicationListener {
 
     @Override
     public void create() {
-        //generateRandomLevel();
-        getLevelFromFile();
+        generateRandomLevel();
+        //getLevelFromFile();
 
         level = new TmxMapLoader().load("level.tmx");
         TiledMapTileLayer groundLayer = getSingleLayer(level);
