@@ -12,6 +12,15 @@ import java.util.HashMap;
 public class FileReader {
     private final int width = 10;
     private final int height = 8;
+    private final Tank playerTank;
+    private final ArrayList<Tank> tanks;
+    private final ArrayList<TreeObstacle> trees;
+
+    public FileReader() {
+        playerTank = new Tank(new GridPoint2(1, 1));
+        tanks = new ArrayList<>();
+        trees = new ArrayList<>();
+    }
 
     public String readFromFileToString(String filePath) {
         try {
@@ -23,27 +32,30 @@ public class FileReader {
         }
     }
 
-    public ArrayList<GameObject> getGameObjectsFromFile(String filePath) {
-        String fileData = readFromFileToString(filePath);
-        ArrayList<HashMap<GridPoint2, GameObjectType>> objectsCoordinates = getObjectsCoordinates(fileData);
-        ArrayList<GameObject> gameObjects = new ArrayList<>();
-        for (var objects : objectsCoordinates) {
-            for (var obj : objects.entrySet()) {
-                gameObjects.add(obj.getValue().getObject(obj.getKey()));
-            }
-        }
-        return gameObjects;
+    public Tank getPlayer() {
+        return playerTank;
     }
 
-    public ArrayList<HashMap<GridPoint2, GameObjectType>> getObjectsCoordinates(String fileContent) {
+    public ArrayList<Tank> getTanks() {
+        return tanks;
+    }
+
+    public ArrayList<TreeObstacle> getTrees() {
+        return trees;
+    }
+
+    public void getGameObjectsFromFile(String filePath) {
+        String fileData = readFromFileToString(filePath);
+        getObjectsFromString(fileData);
+    }
+
+    public void getObjectsFromString(String fileContent) {
         // предполагается, что в файле нет лишних клеток
-        HashMap<GridPoint2, GameObjectType> treesCoordinates = new HashMap<>();
-        HashMap<GridPoint2, GameObjectType> playerCoordinates = new HashMap<>();
         int i = 0;
         char symbol;
         int n = fileContent.length();
         int x = 0, y = height - 1;
-        GridPoint2 coords, playerCoords;
+        GridPoint2 coords;
         while (i < n) {
             symbol = fileContent.charAt(i);
             if (symbol == '_') {
@@ -51,12 +63,18 @@ public class FileReader {
             }
             else if (symbol == 'T') {
                 coords = new GridPoint2(x, y);
-                treesCoordinates.put(coords, GameObjectType.TREE);
+                trees.add(new TreeObstacle(coords));
                 x += 1;
             }
             else if (symbol == 'X') {
-                playerCoords = new GridPoint2(x, y);
-                playerCoordinates.put(playerCoords, GameObjectType.PLAYER);
+                coords = new GridPoint2(x, y);
+                playerTank.setCoordinates(coords);
+                playerTank.setDestinationCoordinates(coords);
+                x += 1;
+            }
+            else if (symbol == 'N') {
+                coords = new GridPoint2(x, y);
+                tanks.add(new Tank(coords));
                 x += 1;
             }
             else if (symbol == '\n') {
@@ -65,9 +83,5 @@ public class FileReader {
             }
             i += 1;
         }
-        ArrayList<HashMap<GridPoint2, GameObjectType>> objects = new ArrayList<>();
-        objects.add(treesCoordinates);
-        objects.add(playerCoordinates);
-        return objects;
     }
 }
