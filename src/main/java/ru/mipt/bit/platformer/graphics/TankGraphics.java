@@ -10,12 +10,12 @@ import ru.mipt.bit.platformer.util.TileMovement;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.createBoundingRectangle;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.drawTextureRegionUnscaled;
 
-public class PlayerGraphics implements ObjectGraphics {
+public class TankGraphics implements ObjectGraphics {
     private final TextureRegion graphics;
     private final Rectangle rectangle;
     private final TileMovement tileMovement;
 
-    public PlayerGraphics(Texture blueTankTexture, TileMovement tileMovement) {
+    public TankGraphics(Texture blueTankTexture, TileMovement tileMovement) {
             this.graphics = new TextureRegion(blueTankTexture);
             this.rectangle = createBoundingRectangle(this.graphics);
         this.tileMovement = tileMovement;

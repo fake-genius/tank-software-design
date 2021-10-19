@@ -11,7 +11,7 @@ import static com.badlogic.gdx.math.MathUtils.isEqual;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.incrementedX;
 
-public class Player implements GameObject {
+public class Tank implements GameObject {
     private final float MOVEMENT_SPEED = 0.4f;
 
     // player current position coordinates on level 10x8 grid (e.g. x=0, y=1)
@@ -22,7 +22,7 @@ public class Player implements GameObject {
     private float rotation;
     private final HashMap<Direction, Float> rotates;
 
-    public Player(GridPoint2 coords) {
+    public Tank(GridPoint2 coords) {
         this.destinationCoordinates = new GridPoint2(coords);
         this.coordinates = new GridPoint2(this.destinationCoordinates);
         this.rotation = 0f;
@@ -117,11 +117,11 @@ public class Player implements GameObject {
     @Override
     public boolean equals(Object obj) {
         if (obj == null) return false;
-        if (!(obj instanceof Player)) return false;
+        if (!(obj instanceof Tank)) return false;
         if (obj == this) return true;
-        return (((Player) obj).getCoordinates() == this.getCoordinates()
-                & ((Player) obj).getDestinationCoordinates() == this.getDestinationCoordinates()
-                & ((Player) obj).getRotation() == this.getRotation());
+        return (((Tank) obj).getCoordinates() == this.getCoordinates()
+                & ((Tank) obj).getDestinationCoordinates() == this.getDestinationCoordinates()
+                & ((Tank) obj).getRotation() == this.getRotation());
     }
 
     @Override
