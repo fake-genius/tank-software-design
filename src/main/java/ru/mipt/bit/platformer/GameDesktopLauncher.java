@@ -6,20 +6,18 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
-import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Interpolation;
 import ru.mipt.bit.platformer.driver.FileReader;
 import ru.mipt.bit.platformer.driver.GameDriver;
 import ru.mipt.bit.platformer.driver.ObstaclesGenerator;
 import ru.mipt.bit.platformer.gameobjects.GameObject;
-import ru.mipt.bit.platformer.gameobjects.Player;
+import ru.mipt.bit.platformer.gameobjects.Tank;
 import ru.mipt.bit.platformer.gameobjects.TreeObstacle;
 import ru.mipt.bit.platformer.graphics.LevelRenderer;
 import ru.mipt.bit.platformer.util.TileMovement;
 
 import java.util.ArrayList;
 
-import static com.badlogic.gdx.graphics.GL20.GL_COLOR_BUFFER_BIT;
 import static com.badlogic.gdx.math.MathUtils.isEqual;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
@@ -29,15 +27,17 @@ public class GameDesktopLauncher implements ApplicationListener {
     private TileMovement tileMovement;
     private LevelRenderer levelRenderer;
 
-    private Player player;
+    private Tank playerTank;
+    private ArrayList<Tank> tanks;
     private ArrayList<TreeObstacle> treeObstacles;
 
     private GameDriver gameDriver;
 
     private void generateRandomLevel() {
         ObstaclesGenerator obstaclesGenerator = new ObstaclesGenerator();
-        player = obstaclesGenerator.generatePlayer();
+        playerTank = obstaclesGenerator.generatePlayer();
         treeObstacles = obstaclesGenerator.generateObstacles(5);
+        tanks = obstaclesGenerator.generateTanks(3);
     }
 
     private void getLevelFromFile() {
@@ -49,7 +49,7 @@ public class GameDesktopLauncher implements ApplicationListener {
             TreeObstacle tree = (TreeObstacle) gameObjects.get(i);
             treeObstacles.add(tree);
         }
-        player = (Player) gameObjects.get(i);
+        playerTank = (Tank) gameObjects.get(i);
     }
 
     @Override
@@ -59,17 +59,17 @@ public class GameDesktopLauncher implements ApplicationListener {
 
         level = new TmxMapLoader().load("level.tmx");
         TiledMapTileLayer groundLayer = getSingleLayer(level);
-        levelRenderer = new LevelRenderer(level, groundLayer, player, treeObstacles);
+        levelRenderer = new LevelRenderer(level, groundLayer, playerTank, treeObstacles, tanks);
         tileMovement = new TileMovement(groundLayer, Interpolation.smooth);
 
-        gameDriver = new GameDriver(player, treeObstacles);
+        gameDriver = new GameDriver(playerTank, treeObstacles, tanks);
 
         levelRenderer.moveRectangleAtTileCenter();
     }
 
     @Override
     public void render() {
-        gameDriver.movePlayer();
+        gameDriver.moveAll();
         levelRenderer.render();
     }
 

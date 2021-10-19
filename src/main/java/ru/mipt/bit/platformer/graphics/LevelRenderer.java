@@ -7,9 +7,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.maps.MapRenderer;
 import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
-import com.badlogic.gdx.math.GridPoint2;
 import com.badlogic.gdx.math.Interpolation;
-import ru.mipt.bit.platformer.gameobjects.Player;
+import ru.mipt.bit.platformer.gameobjects.Tank;
 import ru.mipt.bit.platformer.gameobjects.TreeObstacle;
 import ru.mipt.bit.platformer.util.GdxGameUtils;
 import ru.mipt.bit.platformer.util.TileMovement;
@@ -26,28 +25,34 @@ public class LevelRenderer {
     private final TileMovement tileMovement;
     private final Texture blueTankTexture;
     private final Texture greenTreeTexture;
-    public PlayerGraphics playerGraphics;
+    private final TankGraphics tankPlayerGraphics;
+    private final ArrayList<TankGraphics> tanksGraphics;
     private final ArrayList<TreeObstacleGraphics> treeObstacleGraphics;
-    
-    private final Player player;
-    private final ArrayList<TreeObstacle> treeObstacles;
 
-    public LevelRenderer(TiledMap level, TiledMapTileLayer groundLayer, Player player, ArrayList<TreeObstacle> treeObstacles) {
+    
+    private final Tank playerTank;
+    private final ArrayList<TreeObstacle> treeObstacles;
+    private final ArrayList<Tank> tanks;
+
+    public LevelRenderer(TiledMap level, TiledMapTileLayer groundLayer, Tank playerTank, ArrayList<TreeObstacle> treeObstacles, ArrayList<Tank> tanks) {
         this.batch = new SpriteBatch();
         this.levelRenderer = createSingleLayerMapRenderer(level, batch);
-        //this.groundLayer = getSingleLayer(level);
         this.groundLayer = groundLayer;
         this.tileMovement = new TileMovement(groundLayer, Interpolation.smooth);
 
         this.blueTankTexture = new Texture("images/tank_blue.png");
-        this.playerGraphics = new PlayerGraphics(blueTankTexture, this.tileMovement);
+        this.tankPlayerGraphics = new TankGraphics(blueTankTexture, this.tileMovement);
         this.greenTreeTexture = new Texture("images/greenTree.png");
         this.treeObstacleGraphics = new ArrayList<>();
         for (var tree : treeObstacles)
             treeObstacleGraphics.add(new TreeObstacleGraphics(greenTreeTexture, this.tileMovement));
+        this.tanksGraphics = new ArrayList<>();
+        for (var tank : tanks)
+            tanksGraphics.add(new TankGraphics(blueTankTexture, this.tileMovement));
 
-        this.player = player;
+        this.playerTank = playerTank;
         this.treeObstacles = treeObstacles;
+        this.tanks = tanks;
     }
 
     public TileMovement getTileMovement() {
@@ -65,6 +70,7 @@ public class LevelRenderer {
     public void render() {
         clearScreen();
         movePlayerRectangle();
+        moveTanksRectangle();
         levelRenderer.render();
         batch.begin();
         renderObjects();
@@ -72,7 +78,15 @@ public class LevelRenderer {
     }
 
     void movePlayerRectangle() {
-        playerGraphics.moveBetweenTileCenters(player.getCoordinates(), player.getDestinationCoordinates(), player.getMovementProgress());
+        tankPlayerGraphics.moveBetweenTileCenters(playerTank.getCoordinates(), playerTank.getDestinationCoordinates(), playerTank.getMovementProgress());
+    }
+
+    void moveTanksRectangle() {
+        for (int i = 0; i < tanks.size(); ++i) {
+            var tank = tanks.get(i);
+            var tankGraphics = tanksGraphics.get(i);
+            tankGraphics.moveBetweenTileCenters(tank.getCoordinates(), tank.getDestinationCoordinates(), tank.getMovementProgress());
+        }
     }
 
     void clearScreen() {
@@ -81,7 +95,24 @@ public class LevelRenderer {
     }
 
     void renderObjects() {
-        playerGraphics.render(batch, player.getRotation());
+        renderPlayer();
+        renderTanks();
+        renderTrees();
+    }
+
+    void renderPlayer() {
+        tankPlayerGraphics.render(batch, playerTank.getRotation());
+    }
+
+    void renderTanks() {
+        for (int i = 0; i < tanksGraphics.size(); ++i) {
+            var tank = tanks.get(i);
+            var tankGraphics = tanksGraphics.get(i);
+            tankGraphics.render(batch, tank.getRotation());
+        }
+    }
+
+    void renderTrees() {
         for (var treeGraphics : treeObstacleGraphics)
             treeGraphics.render(batch, 0f);
     }
