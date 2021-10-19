@@ -18,7 +18,6 @@ import ru.mipt.bit.platformer.util.TileMovement;
 
 import java.util.ArrayList;
 
-import static com.badlogic.gdx.math.MathUtils.isEqual;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
 public class GameDesktopLauncher implements ApplicationListener {
