@@ -4,14 +4,13 @@ import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
 import ru.mipt.bit.platformer.gameobjects.GameObject;
 import ru.mipt.bit.platformer.gameobjects.GameObjectType;
-import ru.mipt.bit.platformer.gameobjects.Player;
+import ru.mipt.bit.platformer.gameobjects.Tank;
 import ru.mipt.bit.platformer.gameobjects.TreeObstacle;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class FileReaderTest {
 
@@ -19,41 +18,9 @@ class FileReaderTest {
     void readFromFileToString() {
         FileReader fileReader = new FileReader();
         String gameString = fileReader.readFromFileToString("src\\test\\resources\\test_level.txt");
-        String actual = "__T_T_____\r\nT_________\r\n___X______\r\n______T_T_\r\nT___T_____\r\n_T________\r\n_________T\r\n___TT_____";
+        String actual = "__T_T_____\r\nT_______N_\r\n___X______\r\n______T_T_\r\nT___T_____\r\n_T____N___\r\n_N_______T\r\n___TT_____";
         //               012345678911110123456789111101234567891111012345678911110123456789111101234567891111012345678911110123456789
         assertEquals(gameString, actual);
-    }
-
-    @Test
-    void getGameObjectsFromFile() {
-        FileReader fileReader = new FileReader();
-        ArrayList<GameObject> gameObjects = fileReader.getGameObjectsFromFile("src\\test\\resources\\test_level.txt");
-
-        String gameString = fileReader.readFromFileToString("src\\test\\resources\\test_level.txt");
-        var objectsCoords = fileReader.getObjectsCoordinates(gameString);
-
-        ArrayList<GameObject> expectedObjects = new ArrayList<>();
-        for (var objects : objectsCoords) {
-            for (var obj : objects.entrySet()) {
-                if (obj.getValue() == GameObjectType.TREE)
-                    expectedObjects.add(new TreeObstacle(obj.getKey()));
-                else
-                    expectedObjects.add(new Player(obj.getKey()));
-            }
-        }
-
-        int i = 0;
-        for (; i < expectedObjects.size() - 1; ++i) {
-            TreeObstacle treeExpected = (TreeObstacle) expectedObjects.get(i);
-            TreeObstacle treeActual = (TreeObstacle) gameObjects.get(i);
-            assertEquals(treeExpected.getTreeObstacleCoordinates(), treeActual.getTreeObstacleCoordinates());
-        }
-
-        Player playerExpected = (Player) expectedObjects.get(i);
-        Player playerActual = (Player) gameObjects.get(i);
-        assertEquals(playerExpected.getRotation(), playerActual.getRotation());
-        assertEquals(playerExpected.getCoordinates(), playerActual.getCoordinates());
-        assertEquals(playerExpected.getDestinationCoordinates(), playerActual.getDestinationCoordinates());
     }
 
     void printArray(ArrayList<GameObject> array) {
@@ -62,37 +29,67 @@ class FileReaderTest {
             TreeObstacle tree = (TreeObstacle) array.get(i);
             System.out.println("TREE: " + tree.getTreeObstacleCoordinates());
         }
-        Player player = (Player) array.get(i);
-        System.out.println("PLAYER: " + player.getCoordinates());
+        Tank tank = (Tank) array.get(i);
+        System.out.println("PLAYER: " + tank.getCoordinates());
         System.out.println();
     }
 
     @Test
-    void getObjectsCoordinates() {
+    void getObjectsFromStringTrees() {
         FileReader fileReader = new FileReader();
         String gameString = fileReader.readFromFileToString("src\\test\\resources\\test_level.txt");
-        var objectsCoords = fileReader.getObjectsCoordinates(gameString);
+        fileReader.getObjectsFromString(gameString);
 
-        HashMap<GridPoint2, GameObjectType> expectedTreesCoords = new HashMap<>();
-        expectedTreesCoords.put(new GridPoint2(2, 7), GameObjectType.TREE);
-        expectedTreesCoords.put(new GridPoint2(4, 7), GameObjectType.TREE);
-        expectedTreesCoords.put(new GridPoint2(0, 6), GameObjectType.TREE);
-        expectedTreesCoords.put(new GridPoint2(6, 4), GameObjectType.TREE);
-        expectedTreesCoords.put(new GridPoint2(8, 4), GameObjectType.TREE);
-        expectedTreesCoords.put(new GridPoint2(0, 3), GameObjectType.TREE);
-        expectedTreesCoords.put(new GridPoint2(4, 3), GameObjectType.TREE);
-        expectedTreesCoords.put(new GridPoint2(1, 2), GameObjectType.TREE);
-        expectedTreesCoords.put(new GridPoint2(9, 1), GameObjectType.TREE);
-        expectedTreesCoords.put(new GridPoint2(3, 0), GameObjectType.TREE);
-        expectedTreesCoords.put(new GridPoint2(4, 0), GameObjectType.TREE);
+        ArrayList<TreeObstacle> expectedTrees = new ArrayList<>();
+        expectedTrees.add(new TreeObstacle(new GridPoint2(2, 7)));
+        expectedTrees.add(new TreeObstacle(new GridPoint2(4, 7)));
+        expectedTrees.add(new TreeObstacle(new GridPoint2(0, 6)));
+        expectedTrees.add(new TreeObstacle(new GridPoint2(6, 4)));
+        expectedTrees.add(new TreeObstacle(new GridPoint2(8, 4)));
+        expectedTrees.add(new TreeObstacle(new GridPoint2(0, 3)));
+        expectedTrees.add(new TreeObstacle(new GridPoint2(4, 3)));
+        expectedTrees.add(new TreeObstacle(new GridPoint2(1, 2)));
+        expectedTrees.add(new TreeObstacle(new GridPoint2(9, 1)));
+        expectedTrees.add(new TreeObstacle(new GridPoint2(3, 0)));
+        expectedTrees.add(new TreeObstacle(new GridPoint2(4, 0)));
 
-        HashMap<GridPoint2, GameObjectType> expectedPlayerCoords = new HashMap<>();
-        expectedPlayerCoords.put(new GridPoint2(3, 5), GameObjectType.PLAYER);
+        ArrayList<TreeObstacle> actualTrees = fileReader.getTrees();
 
-        ArrayList<HashMap<GridPoint2, GameObjectType>> objectsCoordsExpected = new ArrayList<>();
-        objectsCoordsExpected.add(expectedTreesCoords);
-        objectsCoordsExpected.add(expectedPlayerCoords);
+        assertEquals(expectedTrees.size(), actualTrees.size());
+        for (int i = 0; i < expectedTrees.size(); ++i) {
+            assertEquals(expectedTrees.get(i).getTreeObstacleCoordinates(), actualTrees.get(i).getTreeObstacleCoordinates());
+        }
+    }
 
-        assertEquals(objectsCoordsExpected, objectsCoords);
+    @Test
+    void getObjectsFromStringTanks() {
+        FileReader fileReader = new FileReader();
+        String gameString = fileReader.readFromFileToString("src\\test\\resources\\test_level.txt");
+        fileReader.getObjectsFromString(gameString);
+
+        ArrayList<Tank> expectedTanks = new ArrayList<>();
+        expectedTanks.add(new Tank(new GridPoint2(8, 6)));
+        expectedTanks.add(new Tank(new GridPoint2(6, 2)));
+        expectedTanks.add(new Tank(new GridPoint2(1, 1)));
+        ArrayList<Tank> actualTanks = fileReader.getTanks();
+        assertEquals(expectedTanks.size(), actualTanks.size());
+        for (int i = 0; i < expectedTanks.size(); ++i) {
+            Tank expectedTank = expectedTanks.get(i);
+            Tank actualTank = actualTanks.get(i);
+            assertEquals(expectedTank.getCoordinates(), actualTank.getCoordinates());
+            assertEquals(expectedTank.getDestinationCoordinates(), actualTank.getDestinationCoordinates());
+        }
+    }
+
+    @Test
+    void getObjectsFromStringPlayer() {
+        FileReader fileReader = new FileReader();
+        String gameString = fileReader.readFromFileToString("src\\test\\resources\\test_level.txt");
+        fileReader.getObjectsFromString(gameString);
+
+        Tank expectedPlayer = new Tank(new GridPoint2(3, 5));
+        Tank actualPlayer = fileReader.getPlayer();
+        assertEquals(expectedPlayer.getCoordinates(), actualPlayer.getCoordinates());
+        assertEquals(expectedPlayer.getDestinationCoordinates(), actualPlayer.getDestinationCoordinates());
     }
 }
