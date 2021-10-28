@@ -1,6 +1,8 @@
-package ru.mipt.bit.platformer.driver;
+package ru.mipt.bit.platformer.driver.LeverGenerators;
 
 import com.badlogic.gdx.math.GridPoint2;
+import ru.mipt.bit.platformer.driver.CollisionChecker;
+import ru.mipt.bit.platformer.driver.GridPoint2Comparator;
 import ru.mipt.bit.platformer.gameobjects.Tank;
 import ru.mipt.bit.platformer.gameobjects.TreeObstacle;
 

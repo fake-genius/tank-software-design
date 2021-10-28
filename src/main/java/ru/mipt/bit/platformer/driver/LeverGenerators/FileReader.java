@@ -1,25 +1,28 @@
-package ru.mipt.bit.platformer.driver;
+package ru.mipt.bit.platformer.driver.LeverGenerators;
 
 import com.badlogic.gdx.math.GridPoint2;
+import ru.mipt.bit.platformer.driver.CollisionChecker;
 import ru.mipt.bit.platformer.gameobjects.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class FileReader {
     private final int width = 10;
     private final int height = 8;
-    private final Tank playerTank;
+    private Tank playerTank;
     private final ArrayList<Tank> tanks;
     private final ArrayList<TreeObstacle> trees;
 
+    private final CollisionChecker collisionChecker;
+
     public FileReader() {
-        playerTank = new Tank(new GridPoint2(1, 1));
+        //playerTank = new Tank(new GridPoint2(1, 1), new CollisionChecker());
         tanks = new ArrayList<>();
         trees = new ArrayList<>();
+        collisionChecker = new CollisionChecker();
     }
 
     public String readFromFileToString(String filePath) {
@@ -62,16 +65,20 @@ public class FileReader {
                 x += 1;
             } else if (symbol == 'T') {
                 coords = new GridPoint2(x, y);
-                trees.add(new TreeObstacle(coords));
+                TreeObstacle treeObstacle = new TreeObstacle(coords);
+                collisionChecker.addImmovable(treeObstacle);
+                trees.add(treeObstacle);
                 x += 1;
             } else if (symbol == 'X') {
                 coords = new GridPoint2(x, y);
-                playerTank.setCoordinates(coords);
-                playerTank.setDestinationCoordinates(coords);
+                playerTank = new Tank(coords, collisionChecker);
+                collisionChecker.addMovable(playerTank);
                 x += 1;
             } else if (symbol == 'N') {
                 coords = new GridPoint2(x, y);
-                tanks.add(new Tank(coords));
+                Tank tank = new Tank(coords, collisionChecker);
+                collisionChecker.addMovable(tank);
+                tanks.add(tank);
                 x += 1;
             } else if (symbol == '\n') {
                 y -= 1;

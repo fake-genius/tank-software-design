@@ -7,11 +7,10 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Interpolation;
-import org.awesome.ai.AI;
 import org.awesome.ai.strategy.NotRecommendingAI;
-import ru.mipt.bit.platformer.driver.FileReader;
+import ru.mipt.bit.platformer.driver.LeverGenerators.FileReader;
 import ru.mipt.bit.platformer.driver.GameDriver;
-import ru.mipt.bit.platformer.driver.ObstaclesGenerator;
+import ru.mipt.bit.platformer.driver.LeverGenerators.ObstaclesGenerator;
 import ru.mipt.bit.platformer.gameobjects.Tank;
 import ru.mipt.bit.platformer.gameobjects.TreeObstacle;
 import ru.mipt.bit.platformer.graphics.LevelRenderer;
@@ -50,8 +49,8 @@ public class GameDesktopLauncher implements ApplicationListener {
 
     @Override
     public void create() {
-        generateRandomLevel();
-        //getLevelFromFile();
+        //generateRandomLevel();
+        getLevelFromFile();
 
         level = new TmxMapLoader().load("level.tmx");
         TiledMapTileLayer groundLayer = getSingleLayer(level);
