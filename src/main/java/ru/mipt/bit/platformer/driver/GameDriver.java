@@ -2,7 +2,7 @@ package ru.mipt.bit.platformer.driver;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.GridPoint2;
-import ru.mipt.bit.platformer.ControlPanel;
+import ru.mipt.bit.platformer.control.ControlPanel;
 import ru.mipt.bit.platformer.Direction;
 import ru.mipt.bit.platformer.gameobjects.Tank;
 import ru.mipt.bit.platformer.gameobjects.TreeObstacle;
@@ -17,11 +17,19 @@ public class GameDriver {
     private final ArrayList<Tank> tanks;
     private final ArrayList<TreeObstacle> treeObstacles;
 
+    private final CollisionChecker collisionChecker;
+
+    private final ControlPanel controlPanel;
+
 
     public GameDriver(Tank playerTank, ArrayList<TreeObstacle> treeObstacles, ArrayList<Tank> tanks) {
         this.playerTank = playerTank;
         this.treeObstacles = treeObstacles;
         this.tanks = tanks;
+
+        this.collisionChecker = new CollisionChecker(this.playerTank, this.treeObstacles, this.tanks);
+
+        this.controlPanel = new ControlPanel();
     }
 
     public void moveAll() {
@@ -29,99 +37,22 @@ public class GameDriver {
         moveTanks();
     }
 
-    public void moveTanks() {
-        float deltaTime = getDeltaTime();
-        processTanksMove();
-        for (Tank tank : tanks) {
-            tank.changeMovementProgress(deltaTime);
-            tank.reachDestination();
-        }
-    }
-
     public void movePlayer() {
         float deltaTime = getDeltaTime();
-
-        ControlPanel controlPanel = new ControlPanel();
-        if (controlPanel.ifPressedKey()) {
-            processPlayerMove(controlPanel);
-        }
+        controlPanel.processKey(playerTank, collisionChecker).execute();
         playerTank.changeMovementProgress(deltaTime);
         playerTank.reachDestination();
     }
 
-    void processTanksMove() {
-        Direction direction = Direction.Up;
-
-        GridPoint2[] newCoordinates;
-        GridPoint2 newPosition, newDestinationCoordinates;
+    public void moveTanks() {
+        float deltaTime = getDeltaTime();
         for (Tank tank : tanks) {
-            direction = direction.getRandomDirection();
-            newCoordinates = tank.getNewCoordinates(direction);
-            newPosition = newCoordinates[0];
-            newDestinationCoordinates = newCoordinates[1];
-
-            if (tank.hasMoved()) {
-                if (checkAllObstacles(newPosition, tank)) {
-                    tank.makeMovement(newDestinationCoordinates);
-                    tank.changeRotation(direction);
-                }
-                //tank.changeRotation(direction);
-            }
+            controlPanel.processRandom(tank, collisionChecker).execute();
         }
-    }
-
-    void processPlayerMove(ControlPanel controlPanel) {
-        Direction direction = controlPanel.getDirectionFromKey();
-
-        GridPoint2[] newCoordinates = playerTank.getNewCoordinates(direction);
-        GridPoint2 newPosition = newCoordinates[0];
-        GridPoint2 newDestinationCoordinates = newCoordinates[1];
-
-        if (playerTank.hasMoved()) {
-            if (checkAllObstacles(newPosition, playerTank)) {
-                playerTank.makeMovement(newDestinationCoordinates);
-            }
-            playerTank.changeRotation(direction);
-        }
-    }
-
-    boolean checkAllObstacles(GridPoint2 newPosition, Tank tankToMove) {
-        boolean okPlayer = checkPlayer(newPosition, tankToMove);
-        boolean okTrees = checkAllTreeObstacles(newPosition, tankToMove);
-        boolean okTanks = checkAllTanks(newPosition, tankToMove);
-        boolean okBounds = checkBounds(newPosition);
-        return okPlayer && okTrees && okTanks && okBounds;
-    }
-
-    boolean checkPlayer(GridPoint2 newPosition, Tank tankToMove) {
-        if (tankToMove.equals(playerTank)) {
-            return true;
-        }
-        return tankToMove.isMovementPossible(playerTank.getCoordinates(), newPosition) && tankToMove.isMovementPossible(playerTank.getDestinationCoordinates(), newPosition);
-    }
-
-    boolean checkAllTreeObstacles(GridPoint2 newPosition, Tank tankToMove) {
-        for (var tree : treeObstacles) {
-            if (!tankToMove.isMovementPossible(tree.getTreeObstacleCoordinates(), newPosition))
-                return false;
-        }
-        return true;
-    }
-
-    boolean checkAllTanks(GridPoint2 newPosition, Tank tankToMove) {
         for (Tank tank : tanks) {
-            if (tank.equals(tankToMove)) {
-                continue;
-            }
-            if (!tankToMove.isMovementPossible(tank.getCoordinates(), newPosition) || !tankToMove.isMovementPossible(tank.getDestinationCoordinates(), newPosition))
-                return false;
+            tank.changeMovementProgress(deltaTime);
+            tank.reachDestination();
         }
-        return true;
-    }
-
-    boolean checkBounds(GridPoint2 newPosition) {
-        int x = newPosition.x, y = newPosition.y;
-        return (x >= 0 && x < width && y >= 0 && y < height);
     }
 
     float getDeltaTime() {

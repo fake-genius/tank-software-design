@@ -10,7 +10,6 @@ import com.badlogic.gdx.math.Interpolation;
 import ru.mipt.bit.platformer.driver.FileReader;
 import ru.mipt.bit.platformer.driver.GameDriver;
 import ru.mipt.bit.platformer.driver.ObstaclesGenerator;
-import ru.mipt.bit.platformer.gameobjects.GameObject;
 import ru.mipt.bit.platformer.gameobjects.Tank;
 import ru.mipt.bit.platformer.gameobjects.TreeObstacle;
 import ru.mipt.bit.platformer.graphics.LevelRenderer;
