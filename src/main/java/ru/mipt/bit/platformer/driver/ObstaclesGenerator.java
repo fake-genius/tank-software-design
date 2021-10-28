@@ -15,10 +15,6 @@ public class ObstaclesGenerator {
     private final int height = 8;
     private final TreeSet<GridPoint2> takenPoints;
 
-    private GridPoint2 playerCoordinates;
-    private ArrayList<GridPoint2> tanksCoordinates;
-    private ArrayList<GridPoint2> treeObstaclesCoordinates;
-
     private final CollisionChecker collisionChecker;
 
     public ObstaclesGenerator() {
@@ -39,14 +35,12 @@ public class ObstaclesGenerator {
             coords = new GridPoint2(randomWidth, randomHeight);
         }
         takenPoints.add(coords);
-        //playerCoordinates = coords;
         Tank tank = new Tank(coords, collisionChecker);
         collisionChecker.addMovable(tank);
         return tank;
     }
 
     public ArrayList<TreeObstacle> generateObstacles(int obstaclesNumber) {
-        //treeObstaclesCoordinates = new ArrayList<>();
         int randomWidth = generateNumber(0, width);
         int randomHeight = generateNumber(0, height);
         GridPoint2 coords = new GridPoint2(randomWidth, randomHeight);
@@ -57,7 +51,6 @@ public class ObstaclesGenerator {
                 coords = new GridPoint2(randomWidth, randomHeight);
             }
             takenPoints.add(coords);
-            //treeObstaclesCoordinates.add(coords);
             TreeObstacle treeObstacle = new TreeObstacle(coords);
             collisionChecker.addImmovable(treeObstacle);
             obstacles.add(treeObstacle);
@@ -66,7 +59,6 @@ public class ObstaclesGenerator {
     }
 
     public ArrayList<Tank> generateTanks(int tanksNumber) {
-        //tanksCoordinates = new ArrayList<>();
         int randomWidth = generateNumber(0, width);
         int randomHeight = generateNumber(0, height);
         GridPoint2 coords = new GridPoint2(randomWidth, randomHeight);
@@ -77,7 +69,6 @@ public class ObstaclesGenerator {
                 coords = new GridPoint2(randomWidth, randomHeight);
             }
             takenPoints.add(coords);
-            //tanksCoordinates.add(coords);
             Tank tank = new Tank(coords, collisionChecker);
             collisionChecker.addMovable(tank);
             tanks.add(tank);

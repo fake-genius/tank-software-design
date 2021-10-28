@@ -11,7 +11,7 @@ public class TreeObstacle implements GameObject {
         this.treeObstacleCoordinates = new GridPoint2(coordinates.x, coordinates.y);
     }
 
-    public GridPoint2 getTreeObstacleCoordinates() {
+    public GridPoint2 getCoordinates() {
         return this.treeObstacleCoordinates;
     }
 
@@ -20,7 +20,7 @@ public class TreeObstacle implements GameObject {
         if (obj == null) return false;
         if (!(obj instanceof TreeObstacle)) return false;
         if (obj == this) return true;
-        return (((TreeObstacle) obj).getTreeObstacleCoordinates() == this.getTreeObstacleCoordinates());
+        return (((TreeObstacle) obj).getCoordinates() == this.getCoordinates());
     }
 
     @Override

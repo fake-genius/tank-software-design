@@ -63,7 +63,7 @@ public class LevelRenderer {
         for (int i = 0; i < treeObstacles.size(); ++i) {
             var tree = treeObstacles.get(i);
             var treeGraphics = treeObstacleGraphics.get(i);
-            GdxGameUtils.moveRectangleAtTileCenter(groundLayer, treeGraphics.getRectangle(), tree.getTreeObstacleCoordinates());
+            GdxGameUtils.moveRectangleAtTileCenter(groundLayer, treeGraphics.getRectangle(), tree.getCoordinates());
         }
     }
 

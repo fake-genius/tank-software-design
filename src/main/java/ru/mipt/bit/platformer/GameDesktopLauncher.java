@@ -7,6 +7,8 @@ import com.badlogic.gdx.maps.tiled.TiledMap;
 import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Interpolation;
+import org.awesome.ai.AI;
+import org.awesome.ai.strategy.NotRecommendingAI;
 import ru.mipt.bit.platformer.driver.FileReader;
 import ru.mipt.bit.platformer.driver.GameDriver;
 import ru.mipt.bit.platformer.driver.ObstaclesGenerator;
@@ -56,7 +58,7 @@ public class GameDesktopLauncher implements ApplicationListener {
         levelRenderer = new LevelRenderer(level, groundLayer, playerTank, treeObstacles, tanks);
         tileMovement = new TileMovement(groundLayer, Interpolation.smooth);
 
-        gameDriver = new GameDriver(playerTank, treeObstacles, tanks);
+        gameDriver = new GameDriver(playerTank, treeObstacles, tanks, new NotRecommendingAI());
 
         levelRenderer.moveRectangleAtTileCenter();
     }

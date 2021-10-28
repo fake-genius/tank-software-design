@@ -1,9 +1,10 @@
 package ru.mipt.bit.platformer.driver;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.math.GridPoint2;
-import ru.mipt.bit.platformer.control.ControlPanel;
-import ru.mipt.bit.platformer.Direction;
+import org.awesome.ai.AI;
+import ru.mipt.bit.platformer.AIControl.TankAIController;
+import ru.mipt.bit.platformer.control.ControlForBots;
+import ru.mipt.bit.platformer.control.ControlForPlayer;
 import ru.mipt.bit.platformer.gameobjects.Tank;
 import ru.mipt.bit.platformer.gameobjects.TreeObstacle;
 
@@ -17,19 +18,20 @@ public class GameDriver {
     private final ArrayList<Tank> tanks;
     private final ArrayList<TreeObstacle> treeObstacles;
 
-    private final CollisionChecker collisionChecker;
+    private final ControlForPlayer controlForPlayer;
+    private final ControlForBots controlForBots;
 
-    private final ControlPanel controlPanel;
+    private final TankAIController tankAIController;
 
-
-    public GameDriver(Tank playerTank, ArrayList<TreeObstacle> treeObstacles, ArrayList<Tank> tanks) {
+    public GameDriver(Tank playerTank, ArrayList<TreeObstacle> treeObstacles, ArrayList<Tank> tanks, AI ai) {
         this.playerTank = playerTank;
         this.treeObstacles = treeObstacles;
         this.tanks = tanks;
 
-        this.collisionChecker = new CollisionChecker(this.playerTank, this.treeObstacles, this.tanks);
+        this.controlForPlayer = new ControlForPlayer();
+        this.controlForBots = new ControlForBots();
 
-        this.controlPanel = new ControlPanel();
+        this.tankAIController = new TankAIController(ai, playerTank, treeObstacles, tanks, width, height);
     }
 
     public void moveAll() {
@@ -39,7 +41,7 @@ public class GameDriver {
 
     public void movePlayer() {
         float deltaTime = getDeltaTime();
-        controlPanel.processKey(playerTank, collisionChecker).execute();
+        controlForPlayer.processKey(playerTank).execute();
         playerTank.changeMovementProgress(deltaTime);
         playerTank.reachDestination();
     }
@@ -47,7 +49,8 @@ public class GameDriver {
     public void moveTanks() {
         float deltaTime = getDeltaTime();
         for (Tank tank : tanks) {
-            controlPanel.processRandom(tank, collisionChecker).execute();
+            //controlForBots.processRandom(tank).execute();
+            tankAIController.executeCommands();
         }
         for (Tank tank : tanks) {
             tank.changeMovementProgress(deltaTime);
