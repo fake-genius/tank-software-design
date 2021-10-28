@@ -5,11 +5,9 @@ import ru.mipt.bit.platformer.gameobjects.Tank;
 
 public class NotMoveCommand implements Command {
     private final Tank tank;
-    private final CollisionChecker collisionChecker;
 
-    public NotMoveCommand(Tank tank, CollisionChecker collisionChecker) {
+    public NotMoveCommand(Tank tank) {
         this.tank = tank;
-        this.collisionChecker = collisionChecker;
     }
 
     @Override

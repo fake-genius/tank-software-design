@@ -3,6 +3,7 @@ package ru.mipt.bit.platformer.gameobjects;
 import com.badlogic.gdx.math.GridPoint2;
 
 import ru.mipt.bit.platformer.Direction;
+import ru.mipt.bit.platformer.driver.CollisionChecker;
 
 import java.util.HashMap;
 import java.util.Objects;
@@ -22,7 +23,9 @@ public class Tank implements GameObject {
     private float rotation;
     private final HashMap<Direction, Float> rotates;
 
-    public Tank(GridPoint2 coords) {
+    private final CollisionChecker collisionChecker;
+
+    public Tank(GridPoint2 coords, CollisionChecker collisionChecker) {
         this.destinationCoordinates = new GridPoint2(coords);
         this.coordinates = new GridPoint2(this.destinationCoordinates);
         this.rotation = 0f;
@@ -31,6 +34,7 @@ public class Tank implements GameObject {
         rotates.put(Direction.Left, -180f);
         rotates.put(Direction.Down, -90f);
         rotates.put(Direction.Right, 0f);
+        this.collisionChecker = collisionChecker;
     }
 
     public GridPoint2 getCoordinates() {
@@ -53,32 +57,12 @@ public class Tank implements GameObject {
         return isEqual(this.movementProgress, 1f);
     }
 
-    public GridPoint2[] getNewCoordinates(Direction direction) {
-        GridPoint2 newPosition = new GridPoint2(this.coordinates);
-        GridPoint2 newDestinationCoordinates = new GridPoint2(this.destinationCoordinates);
-        switch (direction) {
-            case Up:
-                newPosition = incrementedY(newPosition);
-                newDestinationCoordinates.y++;
-                break;
-            case Left:
-                newPosition = decrementedX(newPosition);
-                newDestinationCoordinates.x--;
-                break;
-            case Down:
-                newPosition = decrementedY(newPosition);
-                newDestinationCoordinates.y--;
-                break;
-            case Right:
-                newPosition = incrementedX(newPosition);
-                newDestinationCoordinates.x++;
-                break;
-        }
-        return new GridPoint2[]{newPosition, newDestinationCoordinates};
-    }
-
     public boolean isMovementPossible(GridPoint2 obstacleCoordinates, GridPoint2 newPosition) {
         return !obstacleCoordinates.equals(newPosition);
+    }
+
+    public boolean checkCollisions(GridPoint2 newPosition) {
+        return collisionChecker.checkCollisions(newPosition, this);
     }
 
     public void makeMovement(GridPoint2 newDestinationCoordinates) {
@@ -115,7 +99,6 @@ public class Tank implements GameObject {
     public void setDestinationCoordinates(GridPoint2 coordinates) {
         this.destinationCoordinates = coordinates;
     }
-
 
     @Override
     public boolean equals(Object obj) {

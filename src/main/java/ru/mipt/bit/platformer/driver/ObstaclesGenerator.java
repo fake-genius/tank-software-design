@@ -15,10 +15,18 @@ public class ObstaclesGenerator {
     private final int height = 8;
     private final TreeSet<GridPoint2> takenPoints;
 
+    private GridPoint2 playerCoordinates;
+    private ArrayList<GridPoint2> tanksCoordinates;
+    private ArrayList<GridPoint2> treeObstaclesCoordinates;
+
+    private final CollisionChecker collisionChecker;
+
     public ObstaclesGenerator() {
         obstacles = new ArrayList<>();
         tanks = new ArrayList<>();
         takenPoints = new TreeSet<>(new GridPoint2Comparator());
+
+        this.collisionChecker = new CollisionChecker();
     }
 
     public Tank generatePlayer() {
@@ -31,10 +39,14 @@ public class ObstaclesGenerator {
             coords = new GridPoint2(randomWidth, randomHeight);
         }
         takenPoints.add(coords);
-        return new Tank(coords);
+        //playerCoordinates = coords;
+        Tank tank = new Tank(coords, collisionChecker);
+        collisionChecker.addMovable(tank);
+        return tank;
     }
 
     public ArrayList<TreeObstacle> generateObstacles(int obstaclesNumber) {
+        //treeObstaclesCoordinates = new ArrayList<>();
         int randomWidth = generateNumber(0, width);
         int randomHeight = generateNumber(0, height);
         GridPoint2 coords = new GridPoint2(randomWidth, randomHeight);
@@ -45,12 +57,16 @@ public class ObstaclesGenerator {
                 coords = new GridPoint2(randomWidth, randomHeight);
             }
             takenPoints.add(coords);
-            obstacles.add(new TreeObstacle(coords));
+            //treeObstaclesCoordinates.add(coords);
+            TreeObstacle treeObstacle = new TreeObstacle(coords);
+            collisionChecker.addImmovable(treeObstacle);
+            obstacles.add(treeObstacle);
         }
         return obstacles;
     }
 
     public ArrayList<Tank> generateTanks(int tanksNumber) {
+        //tanksCoordinates = new ArrayList<>();
         int randomWidth = generateNumber(0, width);
         int randomHeight = generateNumber(0, height);
         GridPoint2 coords = new GridPoint2(randomWidth, randomHeight);
@@ -61,7 +77,10 @@ public class ObstaclesGenerator {
                 coords = new GridPoint2(randomWidth, randomHeight);
             }
             takenPoints.add(coords);
-            tanks.add(new Tank(coords));
+            //tanksCoordinates.add(coords);
+            Tank tank = new Tank(coords, collisionChecker);
+            collisionChecker.addMovable(tank);
+            tanks.add(tank);
         }
         return tanks;
     }
