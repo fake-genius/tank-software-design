@@ -10,7 +10,6 @@ import java.util.Objects;
 
 import static com.badlogic.gdx.math.MathUtils.isEqual;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
-import static ru.mipt.bit.platformer.util.GdxGameUtils.incrementedX;
 
 public class Tank implements GameObject {
     private final float MOVEMENT_SPEED = 0.4f;
@@ -24,6 +23,8 @@ public class Tank implements GameObject {
     private final HashMap<Direction, Float> rotates;
 
     private final CollisionChecker collisionChecker;
+
+    private final float life = 100f;
 
     public Tank(GridPoint2 coords, CollisionChecker collisionChecker) {
         this.destinationCoordinates = new GridPoint2(coords);
@@ -57,12 +58,16 @@ public class Tank implements GameObject {
         return isEqual(this.movementProgress, 1f);
     }
 
+    public CollisionChecker getCollisionChecker() {
+        return this.collisionChecker;
+    }
+
     public boolean isMovementPossible(GridPoint2 obstacleCoordinates, GridPoint2 newPosition) {
         return !obstacleCoordinates.equals(newPosition);
     }
 
     public boolean checkCollisions(GridPoint2 newPosition) {
-        return collisionChecker.checkCollisions(newPosition, this);
+        return collisionChecker.checkCollisionsWithTank(newPosition, this);
     }
 
     public void makeMovement(GridPoint2 newDestinationCoordinates) {
@@ -86,6 +91,11 @@ public class Tank implements GameObject {
         if (this.hasMoved()) {
             this.setCoordinates();
         }
+    }
+
+    public void live(float deltaTime) {
+        changeMovementProgress(deltaTime);
+        reachDestination();
     }
 
     public float getMovementSpeed() {

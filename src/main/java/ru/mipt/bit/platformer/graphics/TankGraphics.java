@@ -16,8 +16,8 @@ public class TankGraphics implements ObjectGraphics {
     private final TileMovement tileMovement;
 
     public TankGraphics(Texture blueTankTexture, TileMovement tileMovement) {
-            this.graphics = new TextureRegion(blueTankTexture);
-            this.rectangle = createBoundingRectangle(this.graphics);
+        this.graphics = new TextureRegion(blueTankTexture);
+        this.rectangle = createBoundingRectangle(this.graphics);
         this.tileMovement = tileMovement;
     }
 

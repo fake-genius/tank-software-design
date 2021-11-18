@@ -64,7 +64,9 @@ public class GameDesktopLauncher implements ApplicationListener {
 
     @Override
     public void render() {
+        float deltaTime = gameDriver.getDeltaTime();
         gameDriver.moveAll();
+        gameDriver.liveAll(deltaTime);
         levelRenderer.render();
     }
 

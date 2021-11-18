@@ -22,6 +22,9 @@ public class ControlForPlayer {
         else if (Gdx.input.isKeyPressed(RIGHT) || Gdx.input.isKeyPressed(D)) {
             return new MoveRightCommand(tank);
         }
+        else if (Gdx.input.isKeyPressed(SPACE)) {
+            return new ShootCommand(tank);
+        }
         return new NotMoveCommand(tank);
     }
 }

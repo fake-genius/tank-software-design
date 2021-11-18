@@ -39,26 +39,25 @@ public class GameDriver {
         moveTanks();
     }
 
+    public void liveAll(float deltaTime) {
+        playerTank.live(deltaTime);
+        for (Tank tank : tanks) {
+            tank.live(deltaTime);
+        }
+    }
+
     public void movePlayer() {
-        float deltaTime = getDeltaTime();
         controlForPlayer.processKey(playerTank).execute();
-        playerTank.changeMovementProgress(deltaTime);
-        playerTank.reachDestination();
     }
 
     public void moveTanks() {
-        float deltaTime = getDeltaTime();
         for (Tank tank : tanks) {
-            //controlForBots.processRandom(tank).execute();
-            tankAIController.executeCommands();
-        }
-        for (Tank tank : tanks) {
-            tank.changeMovementProgress(deltaTime);
-            tank.reachDestination();
+            controlForBots.getRandomCommand(tank).execute();
+            //tankAIController.executeCommands();
         }
     }
 
-    float getDeltaTime() {
+    public float getDeltaTime() {
         return Gdx.graphics.getDeltaTime();
     }
 }

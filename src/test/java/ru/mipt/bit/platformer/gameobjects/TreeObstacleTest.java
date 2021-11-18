@@ -9,6 +9,6 @@ class TreeObstacleTest {
     @Test
     void testCreation() {
         TreeObstacle tree = new TreeObstacle(new GridPoint2(1, 3));
-        assertEquals(tree.getTreeObstacleCoordinates(), new GridPoint2(1,3));
+        assertEquals(tree.getCoordinates(), new GridPoint2(1,3));
     }
 }

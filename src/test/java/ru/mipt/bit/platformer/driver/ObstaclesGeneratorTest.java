@@ -2,6 +2,7 @@ package ru.mipt.bit.platformer.driver;
 
 import com.badlogic.gdx.math.GridPoint2;
 import org.junit.jupiter.api.Test;
+import ru.mipt.bit.platformer.driver.LeverGenerators.ObstaclesGenerator;
 import ru.mipt.bit.platformer.gameobjects.Tank;
 
 import java.util.TreeSet;
@@ -19,8 +20,8 @@ class ObstaclesGeneratorTest {
         TreeSet<GridPoint2> coords = new TreeSet<>(new GridPoint2Comparator());
         coords.add(playerTank.getCoordinates());
         for (var tree : obstacles) {
-            assertFalse(coords.contains(tree.getTreeObstacleCoordinates()));
-            coords.add(tree.getTreeObstacleCoordinates());
+            assertFalse(coords.contains(tree.getCoordinates()));
+            coords.add(tree.getCoordinates());
         }
         for (var tank : tanks) {
             assertFalse(coords.contains(tank.getCoordinates()));
@@ -47,8 +48,8 @@ class ObstaclesGeneratorTest {
         TreeSet<GridPoint2> coords = new TreeSet<>(new GridPoint2Comparator());
         assertEquals(obstacles.size(), 5);
         for (var tree : obstacles) {
-            assertFalse(coords.contains(tree.getTreeObstacleCoordinates()));
-            coords.add(tree.getTreeObstacleCoordinates());
+            assertFalse(coords.contains(tree.getCoordinates()));
+            coords.add(tree.getCoordinates());
         }
     }
 
