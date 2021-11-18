@@ -20,7 +20,9 @@ public class ShootCommand implements Command {
         Bullet bullet = new Bullet(bulletCoords, tank.getRotation(), tank.getCollisionChecker());
 
         bullet.checkCollisions(bulletCoords);
-
+        //не доделываю, потому что хочу получить фидбек по последнему дз,
+        //может мне надо много чего в моих командах переделывать,
+        //и я тут только еще больше накидаю не того и не туда
     }
 
 
