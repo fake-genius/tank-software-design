@@ -55,7 +55,7 @@ public class LevelRenderer {
         this.tanks = tanks;
     }
 
-    public TileMovement getTileMovement() {
+    private TileMovement getTileMovement() {
         return this.tileMovement;
     }
 

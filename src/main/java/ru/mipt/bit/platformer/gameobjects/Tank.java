@@ -62,6 +62,25 @@ public class Tank implements GameObject {
         return this.collisionChecker;
     }
 
+    public GridPoint2 getCoordsByDirection(GridPoint2 coords, Direction direction) {
+        GridPoint2 newPosition = new GridPoint2(coords);
+        switch (direction) {
+            case Up:
+                newPosition = incrementedY(newPosition);
+                break;
+            case Left:
+                newPosition = decrementedX(newPosition);
+                break;
+            case Down:
+                newPosition = decrementedY(newPosition);
+                break;
+            case Right:
+                newPosition = incrementedX(newPosition);
+                break;
+        }
+        return newPosition;
+    }
+
     public boolean isMovementPossible(GridPoint2 obstacleCoordinates, GridPoint2 newPosition) {
         return !obstacleCoordinates.equals(newPosition);
     }

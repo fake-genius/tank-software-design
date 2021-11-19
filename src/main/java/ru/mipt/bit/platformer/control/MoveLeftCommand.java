@@ -16,8 +16,10 @@ public class MoveLeftCommand implements Command {
 
     @Override
     public void execute() {
-        GridPoint2 newPosition = decrementedX(tank.getCoordinates());
-        GridPoint2 newDestinationCoordinates = decrementedX(tank.getDestinationCoordinates());
+        GridPoint2 newPosition = tank.getCoordsByDirection(tank.getCoordinates(), Direction.Left);
+        GridPoint2 newDestinationCoordinates = tank.getCoordsByDirection(tank.getDestinationCoordinates(), Direction.Left);
+        //GridPoint2 newPosition = decrementedX(tank.getCoordinates());
+        //GridPoint2 newDestinationCoordinates = decrementedX(tank.getDestinationCoordinates());
 
         if (tank.hasMoved()) {
             if (tank.checkCollisions(newPosition)) {

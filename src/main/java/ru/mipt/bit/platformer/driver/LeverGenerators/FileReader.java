@@ -9,7 +9,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
-public class FileReader {
+public class FileReader implements LevelGenerator {
     private final int width = 10;
     private final int height = 8;
     private Tank playerTank;
