@@ -136,11 +136,12 @@ public class Tank implements GameObject {
         if (obj == this) return true;
         return (((Tank) obj).getCoordinates() == this.getCoordinates()
                 & ((Tank) obj).getDestinationCoordinates() == this.getDestinationCoordinates()
+                & ((Tank) obj).getMovementProgress() == this.getMovementProgress()
                 & ((Tank) obj).getRotation() == this.getRotation());
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(MOVEMENT_SPEED, coordinates, destinationCoordinates, movementProgress, rotation, rotates);
+        return Objects.hash(coordinates, destinationCoordinates, movementProgress, rotation);
     }
 }

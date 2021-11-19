@@ -48,11 +48,13 @@ public class Bullet implements GameObject{
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Bullet bullet = (Bullet) o;
-        return Float.compare(bullet.direction, direction) == 0 && coordinates.equals(bullet.coordinates) && destinationCoordinates.equals(bullet.destinationCoordinates);
+        return (Float.compare(bullet.direction, direction) == 0
+                && coordinates.equals(bullet.coordinates)
+                && destinationCoordinates.equals(bullet.destinationCoordinates));
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(damage, coordinates, destinationCoordinates, direction);
+        return Objects.hash(coordinates, destinationCoordinates, direction);
     }
 }
