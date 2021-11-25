@@ -30,7 +30,7 @@ public class FileReader implements LevelGenerator {
             Path fileName = Path.of(filePath);
             return Files.readString(fileName);
         } catch (IOException e) {
-            System.out.println(e);
+            e.printStackTrace();
             return "";
         }
     }
