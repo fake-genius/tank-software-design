@@ -2,12 +2,15 @@ package ru.mipt.bit.platformer.driver;
 
 import com.badlogic.gdx.math.GridPoint2;
 import ru.mipt.bit.platformer.gameobjects.Bullet;
+import ru.mipt.bit.platformer.gameobjects.GameObject;
 import ru.mipt.bit.platformer.gameobjects.Tank;
 import ru.mipt.bit.platformer.gameobjects.TreeObstacle;
+import ru.mipt.bit.platformer.observer.Event;
+import ru.mipt.bit.platformer.observer.Subscriber;
 
 import java.util.ArrayList;
 
-public class CollisionChecker {
+public class CollisionChecker implements Subscriber {
 
     private final int width = 10;
     private final int height = 8;
@@ -22,19 +25,25 @@ public class CollisionChecker {
         this.bullets = new ArrayList<>();
     }
 
-    public void addMovable(Tank tank) {
+    public void addTank(Tank tank) {
         tanks.add(tank);
     }
 
-    public void addImmovable(TreeObstacle treeObstacle) {
+    public void addTreeObstacle(TreeObstacle treeObstacle) {
         treeObstacles.add(treeObstacle);
+    }
+
+    public void addBullet(Bullet bullet) {
+        bullets.add(bullet);
     }
 
     public boolean checkCollisionsWithBullet(GridPoint2 newPosition, Bullet bullet) {
         if (!checkBounds(newPosition)) {
-            //TODO уничтожение пули
+            bullet.setNotExistent();
+            //bullets.remove(bullet);
             return false;
         }
+
         return checkAllBullets(newPosition, bullet) && checkAllTanksWithBullet(newPosition, bullet) && checkAllTreesWithBullet(newPosition, bullet);
     }
 
@@ -44,7 +53,10 @@ public class CollisionChecker {
                 continue;
             }
             if (!bulletToMove.isMovementPossible(bullet.getCoordinates(), newPosition) || !bulletToMove.isMovementPossible(bullet.getDestinationCoordinates(), newPosition)) {
-                //TODO уничтожение обеих пуль
+                bullet.setNotExistent();
+                bulletToMove.setNotExistent();
+                //bullets.remove(bullet);
+                //bullets.remove(bulletToMove);
                 return false;
             }
         }
@@ -53,8 +65,12 @@ public class CollisionChecker {
 
     public boolean checkAllTanksWithBullet(GridPoint2 newPosition, Bullet bullet) {
         for (var tank : tanks) {
-            if (!bullet.isMovementPossible(tank.getCoordinates(), newPosition) || !bullet.isMovementPossible(tank.getDestinationCoordinates(), newPosition)) {
-                //TODO уменьшение жизни танка и уничтожение пули
+            if (!tank.equals(bullet.getTank()) && (!bullet.isMovementPossible(tank.getCoordinates(), newPosition) || !bullet.isMovementPossible(tank.getDestinationCoordinates(), newPosition)) ) {
+                bullet.setNotExistent();
+                //bullets.remove(bullet);
+                tank.takeDamage(bullet);
+                //if (!tank.isAlive())
+                    //tanks.remove(tank);
                 return false;
             }
         }
@@ -64,7 +80,8 @@ public class CollisionChecker {
     public boolean checkAllTreesWithBullet(GridPoint2 newPosition, Bullet bullet) {
         for (var tree : treeObstacles) {
             if (!bullet.isMovementPossible(tree.getCoordinates(), newPosition)) {
-                //TODO уничтожение пули
+                bullet.setNotExistent();
+                //bullets.remove(bullet);
                 return false;
             }
         }
@@ -97,5 +114,20 @@ public class CollisionChecker {
     boolean checkBounds(GridPoint2 newPosition) {
         int x = newPosition.x, y = newPosition.y;
         return (x >= 0 && x < width && y >= 0 && y < height);
+    }
+
+    @Override
+    public void update(Event event, GameObject gameObject) {
+        switch(event) {
+            case RemoveTank:
+                tanks.remove((Tank) gameObject);
+                break;
+            case RemoveBullet:
+                bullets.remove((Bullet) gameObject);
+                break;
+            case AddBullet:
+                bullets.add((Bullet) gameObject);
+                break;
+        }
     }
 }

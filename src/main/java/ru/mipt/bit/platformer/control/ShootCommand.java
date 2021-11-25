@@ -1,26 +1,40 @@
 package ru.mipt.bit.platformer.control;
 
 import com.badlogic.gdx.math.GridPoint2;
+import ru.mipt.bit.platformer.driver.Level;
 import ru.mipt.bit.platformer.gameobjects.Bullet;
 import ru.mipt.bit.platformer.gameobjects.Tank;
+
+import java.util.Date;
 
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
 public class ShootCommand implements Command {
 
     private final Tank tank;
+    private final Level level;
 
-    public ShootCommand(Tank tank) {
+    public ShootCommand(Tank tank, Level level) {
         this.tank = tank;
+        this.level = level;
     }
 
     @Override
     public void execute() {
+        long time = new Date().getTime();
+        long delta = time - tank.getLastTimeShooting();
+        //if (delta > 1000)
+            //System.out.println("time is " + delta);
+        if (delta < 4000)
+            return;
+
         GridPoint2 bulletCoords = getNextCoords();
-        Bullet bullet = new Bullet(bulletCoords, tank.getRotation(), tank.getCollisionChecker());
+        Bullet bullet = new Bullet(bulletCoords, tank.getRotation(), tank.getCollisionChecker(), tank);
 
-        bullet.checkCollisions(bulletCoords);
-
+        if (bullet.checkCollisions(bulletCoords)) {
+            level.addBullet(bullet);
+            tank.setLastTimeShooting( new Date().getTime());
+        }
     }
 
 
@@ -28,7 +42,7 @@ public class ShootCommand implements Command {
         GridPoint2 coords = tank.getCoordinates();
         GridPoint2 destCoords;
         float rotation = tank.getRotation();
-        //System.out.println("shooting");
+        //System.out.println("shooting " + (new Date().getTime() - tank.getLastTimeShooting()));
 
         if (rotation == 90.0)
             destCoords = incrementedY(coords);

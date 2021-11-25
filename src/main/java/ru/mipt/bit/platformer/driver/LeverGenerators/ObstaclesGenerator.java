@@ -45,7 +45,7 @@ public class ObstaclesGenerator implements LevelGenerator {
         }
         takenPoints.add(coords);
         Tank playerTank = new Tank(coords, collisionChecker);
-        collisionChecker.addMovable(playerTank);
+        collisionChecker.addTank(playerTank);
         return playerTank;
     }
 
@@ -61,7 +61,7 @@ public class ObstaclesGenerator implements LevelGenerator {
             }
             takenPoints.add(coords);
             TreeObstacle treeObstacle = new TreeObstacle(coords);
-            collisionChecker.addImmovable(treeObstacle);
+            collisionChecker.addTreeObstacle(treeObstacle);
             obstacles.add(treeObstacle);
         }
         return obstacles;
@@ -79,7 +79,7 @@ public class ObstaclesGenerator implements LevelGenerator {
             }
             takenPoints.add(coords);
             Tank tank = new Tank(coords, collisionChecker);
-            collisionChecker.addMovable(tank);
+            collisionChecker.addTank(tank);
             tanks.add(tank);
         }
         return tanks;

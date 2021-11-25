@@ -66,18 +66,18 @@ public class FileReader implements LevelGenerator {
             } else if (symbol == 'T') {
                 coords = new GridPoint2(x, y);
                 TreeObstacle treeObstacle = new TreeObstacle(coords);
-                collisionChecker.addImmovable(treeObstacle);
+                collisionChecker.addTreeObstacle(treeObstacle);
                 trees.add(treeObstacle);
                 x += 1;
             } else if (symbol == 'X') {
                 coords = new GridPoint2(x, y);
                 playerTank = new Tank(coords, collisionChecker);
-                collisionChecker.addMovable(playerTank);
+                collisionChecker.addTank(playerTank);
                 x += 1;
             } else if (symbol == 'N') {
                 coords = new GridPoint2(x, y);
                 Tank tank = new Tank(coords, collisionChecker);
-                collisionChecker.addMovable(tank);
+                collisionChecker.addTank(tank);
                 tanks.add(tank);
                 x += 1;
             } else if (symbol == '\n') {

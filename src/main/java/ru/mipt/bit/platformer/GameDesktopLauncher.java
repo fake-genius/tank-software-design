@@ -12,6 +12,7 @@ import ru.mipt.bit.platformer.driver.Level;
 import ru.mipt.bit.platformer.driver.LeverGenerators.FileReader;
 import ru.mipt.bit.platformer.driver.GameDriver;
 import ru.mipt.bit.platformer.driver.LeverGenerators.ObstaclesGenerator;
+import ru.mipt.bit.platformer.gameobjects.Bullet;
 import ru.mipt.bit.platformer.gameobjects.Tank;
 import ru.mipt.bit.platformer.gameobjects.TreeObstacle;
 import ru.mipt.bit.platformer.graphics.LevelRenderer;
@@ -30,6 +31,7 @@ public class GameDesktopLauncher implements ApplicationListener {
     private Tank playerTank;
     private ArrayList<Tank> tanks;
     private ArrayList<TreeObstacle> treeObstacles;
+    private ArrayList<Bullet> bullets;
 
     private GameDriver gameDriver;
 
@@ -41,6 +43,7 @@ public class GameDesktopLauncher implements ApplicationListener {
         playerTank = level.getPlayerTank();
         tanks = level.getTanks();
         treeObstacles = level.getTreeObstacles();
+        bullets = level.getBullets();
     }
 
     private void getLevelFromFile() {
@@ -50,6 +53,7 @@ public class GameDesktopLauncher implements ApplicationListener {
         playerTank = level.getPlayerTank();
         tanks = level.getTanks();
         treeObstacles = level.getTreeObstacles();
+        bullets = level.getBullets();
     }
 
     @Override
@@ -59,10 +63,13 @@ public class GameDesktopLauncher implements ApplicationListener {
 
         levelTiledMap = new TmxMapLoader().load("level.tmx");
         TiledMapTileLayer groundLayer = getSingleLayer(levelTiledMap);
-        levelRenderer = new LevelRenderer(levelTiledMap, groundLayer, playerTank, treeObstacles, tanks);
+        levelRenderer = new LevelRenderer(levelTiledMap, groundLayer, playerTank, treeObstacles, tanks, bullets);
         tileMovement = new TileMovement(groundLayer, Interpolation.smooth);
 
-        gameDriver = new GameDriver(playerTank, treeObstacles, tanks, new NotRecommendingAI());
+        gameDriver = new GameDriver(playerTank, treeObstacles, tanks, bullets, level, new NotRecommendingAI());
+        level.subscribe(gameDriver);
+        level.subscribe(levelRenderer);
+        level.subscribe(playerTank.getCollisionChecker());
 
         levelRenderer.moveRectangleAtTileCenter();
     }
@@ -72,7 +79,7 @@ public class GameDesktopLauncher implements ApplicationListener {
         float deltaTime = gameDriver.getDeltaTime();
         gameDriver.generateCommands();
         gameDriver.executeCommands();
-        level.update(deltaTime);
+        level.updateObjects(deltaTime);
         levelRenderer.render();
     }
 

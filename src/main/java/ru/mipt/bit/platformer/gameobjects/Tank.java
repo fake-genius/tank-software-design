@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.GridPoint2;
 import ru.mipt.bit.platformer.Direction;
 import ru.mipt.bit.platformer.driver.CollisionChecker;
 
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Objects;
 
@@ -12,7 +13,7 @@ import static com.badlogic.gdx.math.MathUtils.isEqual;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
 public class Tank implements GameObject {
-    private final float MOVEMENT_SPEED = 0.4f;
+    private float MOVEMENT_SPEED = 0.4f;
 
     // player current position coordinates on level 10x8 grid (e.g. x=0, y=1)
     private GridPoint2 coordinates;
@@ -20,22 +21,25 @@ public class Tank implements GameObject {
     private GridPoint2 destinationCoordinates;
     private float movementProgress = 1f;
     private float rotation;
-    private final HashMap<Direction, Float> rotates;
 
     private final CollisionChecker collisionChecker;
 
-    private final float life = 100f;
+    private float life = 99f;
+
+    private boolean alive;
+    private long lastTimeShooting = new Date().getTime();
 
     public Tank(GridPoint2 coords, CollisionChecker collisionChecker) {
         this.destinationCoordinates = new GridPoint2(coords);
         this.coordinates = new GridPoint2(this.destinationCoordinates);
         this.rotation = 0f;
-        rotates = new HashMap<>();
-        rotates.put(Direction.Up, 90f);
-        rotates.put(Direction.Left, -180f);
-        rotates.put(Direction.Down, -90f);
-        rotates.put(Direction.Right, 0f);
+
         this.collisionChecker = collisionChecker;
+        alive = true;
+    }
+
+    public boolean isAlive() {
+        return this.alive;
     }
 
     public GridPoint2 getCoordinates() {
@@ -52,6 +56,14 @@ public class Tank implements GameObject {
 
     public float getRotation() {
         return this.rotation;
+    }
+
+    public long getLastTimeShooting() {
+        return lastTimeShooting;
+    }
+
+    public void setLastTimeShooting(long time) {
+        lastTimeShooting = time;
     }
 
     public boolean hasMoved() {
@@ -95,7 +107,7 @@ public class Tank implements GameObject {
     }
 
     public void changeRotation(Direction direction) {
-        this.rotation = rotates.get(direction);
+        this.rotation = direction.mapFromDirection(direction);
     }
 
     public void changeMovementProgress(float deltaTime) {
@@ -115,6 +127,13 @@ public class Tank implements GameObject {
     public void live(float deltaTime) {
         changeMovementProgress(deltaTime);
         reachDestination();
+    }
+
+    public void takeDamage(Bullet bullet) {
+        System.out.println("Tank " + coordinates.x + " " + coordinates.y + " is getting damage from " + life + " to " + (life - bullet.getDamage()));
+        life -= bullet.getDamage();
+        if (life <= 0f)
+            alive = false;
     }
 
     public float getMovementSpeed() {
