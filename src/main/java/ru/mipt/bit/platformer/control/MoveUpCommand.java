@@ -18,8 +18,6 @@ public class MoveUpCommand implements Command {
     public void execute() {
         GridPoint2 newPosition = tank.getCoordsByDirection(tank.getCoordinates(), Direction.Up);
         GridPoint2 newDestinationCoordinates = tank.getCoordsByDirection(tank.getDestinationCoordinates(), Direction.Up);
-        //GridPoint2 newPosition = incrementedY(tank.getCoordinates());
-        //GridPoint2 newDestinationCoordinates = incrementedY(tank.getDestinationCoordinates());
 
         if (tank.hasMoved()) {
             if (tank.checkCollisions(newPosition)) {

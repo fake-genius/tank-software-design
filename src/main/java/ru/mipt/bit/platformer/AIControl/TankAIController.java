@@ -23,6 +23,11 @@ public class TankAIController {
         this.tanksCommands = new ArrayList<>();
     }
 
+    public ArrayList<Command> getCommands() {
+        recommendCommands();
+        return tanksCommands;
+    }
+
     public void executeCommands() {
         recommendCommands();
         for (Command command : tanksCommands) {

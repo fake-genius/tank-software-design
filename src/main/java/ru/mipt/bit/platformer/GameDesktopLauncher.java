@@ -8,6 +8,7 @@ import com.badlogic.gdx.maps.tiled.TiledMapTileLayer;
 import com.badlogic.gdx.maps.tiled.TmxMapLoader;
 import com.badlogic.gdx.math.Interpolation;
 import org.awesome.ai.strategy.NotRecommendingAI;
+import ru.mipt.bit.platformer.driver.Level;
 import ru.mipt.bit.platformer.driver.LeverGenerators.FileReader;
 import ru.mipt.bit.platformer.driver.GameDriver;
 import ru.mipt.bit.platformer.driver.LeverGenerators.ObstaclesGenerator;
@@ -22,7 +23,7 @@ import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
 public class GameDesktopLauncher implements ApplicationListener {
 
-    private TiledMap level;
+    private TiledMap levelTiledMap;
     private TileMovement tileMovement;
     private LevelRenderer levelRenderer;
 
@@ -32,19 +33,23 @@ public class GameDesktopLauncher implements ApplicationListener {
 
     private GameDriver gameDriver;
 
+    private Level level;
+
     private void generateRandomLevel() {
-        ObstaclesGenerator obstaclesGenerator = new ObstaclesGenerator();
-        playerTank = obstaclesGenerator.generatePlayer();
-        treeObstacles = obstaclesGenerator.generateObstacles(10);
-        tanks = obstaclesGenerator.generateTanks(3);
+        ObstaclesGenerator obstaclesGenerator = new ObstaclesGenerator(3, 10);
+        level = obstaclesGenerator.generateLevel();
+        playerTank = level.getPlayerTank();
+        tanks = level.getTanks();
+        treeObstacles = level.getTreeObstacles();
     }
 
     private void getLevelFromFile() {
         FileReader fileReader = new FileReader();
         fileReader.getGameObjectsFromFile("src\\test\\resources\\test_level.txt");
-        playerTank = fileReader.getPlayer();
-        tanks = fileReader.getTanks();
-        treeObstacles = fileReader.getTrees();
+        level = fileReader.generateLevel();
+        playerTank = level.getPlayerTank();
+        tanks = level.getTanks();
+        treeObstacles = level.getTreeObstacles();
     }
 
     @Override
@@ -52,9 +57,9 @@ public class GameDesktopLauncher implements ApplicationListener {
         //generateRandomLevel();
         getLevelFromFile();
 
-        level = new TmxMapLoader().load("level.tmx");
-        TiledMapTileLayer groundLayer = getSingleLayer(level);
-        levelRenderer = new LevelRenderer(level, groundLayer, playerTank, treeObstacles, tanks);
+        levelTiledMap = new TmxMapLoader().load("level.tmx");
+        TiledMapTileLayer groundLayer = getSingleLayer(levelTiledMap);
+        levelRenderer = new LevelRenderer(levelTiledMap, groundLayer, playerTank, treeObstacles, tanks);
         tileMovement = new TileMovement(groundLayer, Interpolation.smooth);
 
         gameDriver = new GameDriver(playerTank, treeObstacles, tanks, new NotRecommendingAI());
@@ -65,8 +70,9 @@ public class GameDesktopLauncher implements ApplicationListener {
     @Override
     public void render() {
         float deltaTime = gameDriver.getDeltaTime();
-        gameDriver.moveAll();
-        gameDriver.liveAll(deltaTime);
+        gameDriver.generateCommands();
+        gameDriver.executeCommands();
+        level.update(deltaTime);
         levelRenderer.render();
     }
 
@@ -88,7 +94,7 @@ public class GameDesktopLauncher implements ApplicationListener {
     @Override
     public void dispose() {
         // dispose of all the native resources (classes which implement com.badlogic.gdx.utils.Disposable)
-        level.dispose();
+        levelTiledMap.dispose();
         levelRenderer.dispose();
     }
 

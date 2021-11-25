@@ -18,8 +18,6 @@ public class MoveDownCommand implements Command {
     public void execute() {
         GridPoint2 newPosition = tank.getCoordsByDirection(tank.getCoordinates(), Direction.Down);
         GridPoint2 newDestinationCoordinates = tank.getCoordsByDirection(tank.getDestinationCoordinates(), Direction.Down);
-        //GridPoint2 newPosition = decrementedY(tank.getCoordinates());
-        //GridPoint2 newDestinationCoordinates = decrementedY(tank.getDestinationCoordinates());
 
         if (tank.hasMoved()) {
             if (tank.checkCollisions(newPosition)) {

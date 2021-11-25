@@ -2,6 +2,7 @@ package ru.mipt.bit.platformer.driver.LeverGenerators;
 
 import com.badlogic.gdx.math.GridPoint2;
 import ru.mipt.bit.platformer.driver.CollisionChecker;
+import ru.mipt.bit.platformer.driver.Level;
 import ru.mipt.bit.platformer.gameobjects.*;
 
 import java.io.IOException;
@@ -19,7 +20,6 @@ public class FileReader implements LevelGenerator {
     private final CollisionChecker collisionChecker;
 
     public FileReader() {
-        //playerTank = new Tank(new GridPoint2(1, 1), new CollisionChecker());
         tanks = new ArrayList<>();
         trees = new ArrayList<>();
         collisionChecker = new CollisionChecker();
@@ -86,5 +86,10 @@ public class FileReader implements LevelGenerator {
             }
             i += 1;
         }
+    }
+
+    @Override
+    public Level generateLevel() {
+        return new Level(playerTank, trees, tanks);
     }
 }

@@ -3,6 +3,7 @@ package ru.mipt.bit.platformer.driver.LeverGenerators;
 import com.badlogic.gdx.math.GridPoint2;
 import ru.mipt.bit.platformer.driver.CollisionChecker;
 import ru.mipt.bit.platformer.driver.GridPoint2Comparator;
+import ru.mipt.bit.platformer.driver.Level;
 import ru.mipt.bit.platformer.gameobjects.Tank;
 import ru.mipt.bit.platformer.gameobjects.TreeObstacle;
 
@@ -19,12 +20,18 @@ public class ObstaclesGenerator implements LevelGenerator {
 
     private final CollisionChecker collisionChecker;
 
-    public ObstaclesGenerator() {
+    private final int tanksNumber;
+    private final int obstaclesNumber;
+
+    public ObstaclesGenerator(int tanksNumber, int obstaclesNumber) {
         obstacles = new ArrayList<>();
         tanks = new ArrayList<>();
         takenPoints = new TreeSet<>(new GridPoint2Comparator());
 
         this.collisionChecker = new CollisionChecker();
+
+        this.tanksNumber = tanksNumber;
+        this.obstaclesNumber = obstaclesNumber;
     }
 
     public Tank generatePlayer() {
@@ -37,9 +44,9 @@ public class ObstaclesGenerator implements LevelGenerator {
             coords = new GridPoint2(randomWidth, randomHeight);
         }
         takenPoints.add(coords);
-        Tank tank = new Tank(coords, collisionChecker);
-        collisionChecker.addMovable(tank);
-        return tank;
+        Tank playerTank = new Tank(coords, collisionChecker);
+        collisionChecker.addMovable(playerTank);
+        return playerTank;
     }
 
     public ArrayList<TreeObstacle> generateObstacles(int obstaclesNumber) {
@@ -80,5 +87,10 @@ public class ObstaclesGenerator implements LevelGenerator {
 
     public int generateNumber(int from, int to) {
         return ThreadLocalRandom.current().nextInt(from, to);
+    }
+
+    @Override
+    public Level generateLevel() {
+        return new Level(generatePlayer(), generateObstacles(obstaclesNumber), generateTanks(tanksNumber));
     }
 }

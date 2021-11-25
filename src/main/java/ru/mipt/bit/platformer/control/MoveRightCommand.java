@@ -18,8 +18,6 @@ public class MoveRightCommand implements Command {
     public void execute() {
         GridPoint2 newPosition = tank.getCoordsByDirection(tank.getCoordinates(), Direction.Right);
         GridPoint2 newDestinationCoordinates = tank.getCoordsByDirection(tank.getDestinationCoordinates(), Direction.Right);
-        //GridPoint2 newPosition = incrementedX(tank.getCoordinates());
-        //GridPoint2 newDestinationCoordinates = incrementedX(tank.getDestinationCoordinates());
 
         if (tank.hasMoved()) {
             if (tank.checkCollisions(newPosition)) {
