@@ -21,9 +21,7 @@ public class ShootCommand implements Command {
 
     @Override
     public void execute() {
-        long time = new Date().getTime();
-        long delta = time - tank.getLastTimeShooting();
-        if (delta < 4000)
+        if (!tank.canShoot())
             return;
 
         GridPoint2 bulletCoords = getNextCoords();

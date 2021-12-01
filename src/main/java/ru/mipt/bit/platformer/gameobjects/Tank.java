@@ -4,16 +4,19 @@ import com.badlogic.gdx.math.GridPoint2;
 
 import ru.mipt.bit.platformer.Direction;
 import ru.mipt.bit.platformer.driver.CollisionChecker;
+import ru.mipt.bit.platformer.gameobjects.state.MediumDamagedState;
+import ru.mipt.bit.platformer.gameobjects.state.NotDamagedState;
+import ru.mipt.bit.platformer.gameobjects.state.SevereDamagedState;
+import ru.mipt.bit.platformer.gameobjects.state.State;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Objects;
 
 import static com.badlogic.gdx.math.MathUtils.isEqual;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
 public class Tank implements GameObject {
-    private float MOVEMENT_SPEED = 0.4f;
+    private float movementSpeed = 0.4f;
 
     // player current position coordinates on level 10x8 grid (e.g. x=0, y=1)
     private GridPoint2 coordinates;
@@ -29,6 +32,8 @@ public class Tank implements GameObject {
     private boolean alive;
     private long lastTimeShooting = new Date().getTime();
 
+    private State state;
+
     public Tank(GridPoint2 coords, CollisionChecker collisionChecker) {
         this.destinationCoordinates = new GridPoint2(coords);
         this.coordinates = new GridPoint2(this.destinationCoordinates);
@@ -36,6 +41,8 @@ public class Tank implements GameObject {
 
         this.collisionChecker = collisionChecker;
         alive = true;
+
+        this.state = new NotDamagedState(this);
     }
 
     public boolean isAlive() {
@@ -93,6 +100,10 @@ public class Tank implements GameObject {
         return newPosition;
     }
 
+    public boolean canShoot() {
+        return state.canShoot();
+    }
+
     public boolean isMovementPossible(GridPoint2 obstacleCoordinates, GridPoint2 newPosition) {
         return !obstacleCoordinates.equals(newPosition);
     }
@@ -111,11 +122,15 @@ public class Tank implements GameObject {
     }
 
     public void changeMovementProgress(float deltaTime) {
-        this.movementProgress = continueProgress(this.movementProgress, deltaTime, MOVEMENT_SPEED);
+        this.movementProgress = continueProgress(this.movementProgress, deltaTime, movementSpeed);
     }
 
     void setCoordinates() {
         this.coordinates.set(this.destinationCoordinates);
+    }
+
+    public void setMovementSpeed(float newSpeed) {
+        movementSpeed = newSpeed;
     }
 
     public void reachDestination() {
@@ -132,12 +147,17 @@ public class Tank implements GameObject {
     public void takeDamage(Bullet bullet) {
         System.out.println("Tank " + coordinates.x + " " + coordinates.y + " is getting damage from " + life + " to " + (life - bullet.getDamage()));
         life -= bullet.getDamage();
+        if (life == 66.0) {
+            state = new MediumDamagedState(this);
+        } else if (life == 33.0) {
+            state = new SevereDamagedState(this);
+        }
         if (life <= 0f)
             alive = false;
     }
 
     public float getMovementSpeed() {
-        return MOVEMENT_SPEED;
+        return movementSpeed;
     }
 
     public void setCoordinates(GridPoint2 coordinates) {
