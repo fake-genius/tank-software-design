@@ -23,8 +23,6 @@ public class ShootCommand implements Command {
     public void execute() {
         long time = new Date().getTime();
         long delta = time - tank.getLastTimeShooting();
-        //if (delta > 1000)
-            //System.out.println("time is " + delta);
         if (delta < 4000)
             return;
 
@@ -33,8 +31,8 @@ public class ShootCommand implements Command {
 
         if (bullet.checkCollisions(bulletCoords)) {
             level.addBullet(bullet);
-            tank.setLastTimeShooting( new Date().getTime());
         }
+        tank.setLastTimeShooting(new Date().getTime());
     }
 
 
@@ -42,7 +40,6 @@ public class ShootCommand implements Command {
         GridPoint2 coords = tank.getCoordinates();
         GridPoint2 destCoords;
         float rotation = tank.getRotation();
-        //System.out.println("shooting " + (new Date().getTime() - tank.getLastTimeShooting()));
 
         if (rotation == 90.0)
             destCoords = incrementedY(coords);
