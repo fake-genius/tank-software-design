@@ -26,9 +26,19 @@ public class TreeObstacleGraphics implements ObjectGraphics {
         drawTextureRegionUnscaled(batch, this.graphics, this.rectangle, rotation);
     }
 
+    @Override
+    public void moveBetweenTileCenters(GridPoint2 coordinates, GridPoint2 destinationCoordinates, float movementProgress) {
+    }
+
+    @Override
+    public void changeHealthBar() {
+
+    }
+
     public TextureRegion getGraphics() {
         return this.graphics;
     }
+
     public Rectangle getRectangle() {
         return this.rectangle;
     }
