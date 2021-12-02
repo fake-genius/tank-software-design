@@ -10,9 +10,9 @@ import static com.badlogic.gdx.math.MathUtils.isEqual;
 import static ru.mipt.bit.platformer.util.GdxGameUtils.*;
 
 public class Bullet implements GameObject{
-    private final float MOVEMENT_SPEED = 0.6f;
-    public final float damage = 33;
-    private GridPoint2 coordinates;
+    private final float movementSpeed = 0.3f;
+    public final int damage = 33;
+    private final GridPoint2 coordinates;
     private GridPoint2 destinationCoordinates;
     private final float rotation;
     private Direction direction = Direction.Up;
@@ -87,7 +87,7 @@ public class Bullet implements GameObject{
     }
 
     public void changeMovementProgress(float deltaTime) {
-        this.movementProgress = continueProgress(this.movementProgress, deltaTime, MOVEMENT_SPEED);
+        this.movementProgress = continueProgress(this.movementProgress, deltaTime, movementSpeed);
     }
 
     void setCoordinates() {

@@ -19,7 +19,7 @@ public class Tank implements GameObject {
     private float movementSpeed = 0.4f;
 
     // player current position coordinates on level 10x8 grid (e.g. x=0, y=1)
-    private GridPoint2 coordinates;
+    private final GridPoint2 coordinates;
     // which tile the player want to go next
     private GridPoint2 destinationCoordinates;
     private float movementProgress = 1f;
@@ -27,7 +27,7 @@ public class Tank implements GameObject {
 
     private final CollisionChecker collisionChecker;
 
-    private float life = 99f;
+    private int life = 99;
 
     private boolean alive;
     private long lastTimeShooting = new Date().getTime();
@@ -71,6 +71,10 @@ public class Tank implements GameObject {
 
     public void setLastTimeShooting(long time) {
         lastTimeShooting = time;
+    }
+
+    public int getLife() {
+        return life;
     }
 
     public boolean hasMoved() {
@@ -145,27 +149,19 @@ public class Tank implements GameObject {
     }
 
     public void takeDamage(Bullet bullet) {
-        System.out.println("Tank " + coordinates.x + " " + coordinates.y + " is getting damage from " + life + " to " + (life - bullet.getDamage()));
+        //System.out.println("Tank " + coordinates.x + " " + coordinates.y + " is getting damage from " + life + " to " + (life - bullet.getDamage()));
         life -= bullet.getDamage();
-        if (life == 66.0) {
+        if (life == 66) {
             state = new MediumDamagedState(this);
-        } else if (life == 33.0) {
+        } else if (life == 33) {
             state = new SevereDamagedState(this);
         }
-        if (life <= 0f)
+        if (life <= 0)
             alive = false;
     }
 
     public float getMovementSpeed() {
         return movementSpeed;
-    }
-
-    public void setCoordinates(GridPoint2 coordinates) {
-        this.coordinates = coordinates;
-    }
-
-    public void setDestinationCoordinates(GridPoint2 coordinates) {
-        this.destinationCoordinates = coordinates;
     }
 
     @Override
