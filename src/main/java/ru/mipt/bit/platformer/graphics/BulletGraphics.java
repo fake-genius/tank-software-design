@@ -12,7 +12,7 @@ import static ru.mipt.bit.platformer.util.GdxGameUtils.drawTextureRegionUnscaled
 
 public class BulletGraphics implements ObjectGraphics {
     private final TextureRegion graphics;
-    private final Rectangle rectangle;
+    private Rectangle rectangle;
     private final TileMovement tileMovement;
 
     public BulletGraphics(Texture bulletTexture, TileMovement tileMovement) {
@@ -21,8 +21,14 @@ public class BulletGraphics implements ObjectGraphics {
         this.tileMovement = tileMovement;
     }
 
+    @Override
     public void moveBetweenTileCenters(GridPoint2 coordinates, GridPoint2 destinationCoordinates, float movementProgress) {
         tileMovement.moveRectangleBetweenTileCenters(rectangle, coordinates, destinationCoordinates, movementProgress);
+    }
+
+    @Override
+    public void changeHealthBar() {
+
     }
 
     @Override

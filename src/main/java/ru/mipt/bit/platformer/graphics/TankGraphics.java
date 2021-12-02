@@ -12,7 +12,7 @@ import static ru.mipt.bit.platformer.util.GdxGameUtils.drawTextureRegionUnscaled
 
 public class TankGraphics implements ObjectGraphics {
     private final TextureRegion graphics;
-    private final Rectangle rectangle;
+    private Rectangle rectangle;
     private final TileMovement tileMovement;
 
     public TankGraphics(Texture blueTankTexture, TileMovement tileMovement) {
@@ -26,8 +26,14 @@ public class TankGraphics implements ObjectGraphics {
         drawTextureRegionUnscaled(batch, this.graphics, this.rectangle, rotation);
     }
 
+    @Override
     public void moveBetweenTileCenters(GridPoint2 coordinates, GridPoint2 destinationCoordinates, float movementProgress) {
         tileMovement.moveRectangleBetweenTileCenters(rectangle, coordinates, destinationCoordinates, movementProgress);
+    }
+
+    @Override
+    public void changeHealthBar() {
+
     }
 
     public TextureRegion getGraphics() {
