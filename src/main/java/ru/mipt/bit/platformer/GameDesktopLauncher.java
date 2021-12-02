@@ -63,10 +63,10 @@ public class GameDesktopLauncher implements ApplicationListener {
 
         levelTiledMap = new TmxMapLoader().load("level.tmx");
         TiledMapTileLayer groundLayer = getSingleLayer(levelTiledMap);
-        levelRenderer = new LevelRenderer(levelTiledMap, groundLayer, playerTank, treeObstacles, tanks, bullets);
+        levelRenderer = new LevelRenderer(levelTiledMap, groundLayer, playerTank, treeObstacles, tanks);
         tileMovement = new TileMovement(groundLayer, Interpolation.smooth);
 
-        gameDriver = new GameDriver(playerTank, treeObstacles, tanks, bullets, level, new NotRecommendingAI());
+        gameDriver = new GameDriver(playerTank, treeObstacles, tanks, bullets, level, new NotRecommendingAI(), levelRenderer);
         level.subscribe(gameDriver);
         level.subscribe(levelRenderer);
         level.subscribe(playerTank.getCollisionChecker());

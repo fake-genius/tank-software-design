@@ -10,6 +10,7 @@ import ru.mipt.bit.platformer.gameobjects.Bullet;
 import ru.mipt.bit.platformer.gameobjects.GameObject;
 import ru.mipt.bit.platformer.gameobjects.Tank;
 import ru.mipt.bit.platformer.gameobjects.TreeObstacle;
+import ru.mipt.bit.platformer.graphics.LevelRenderer;
 import ru.mipt.bit.platformer.observer.Event;
 import ru.mipt.bit.platformer.observer.Subscriber;
 
@@ -31,13 +32,14 @@ public class GameDriver implements Subscriber {
 
     private final ArrayList<Command> commands;
 
-    public GameDriver(Tank playerTank, ArrayList<TreeObstacle> treeObstacles, ArrayList<Tank> tanks, ArrayList<Bullet> bullets, Level level, AI ai) {
+    public GameDriver(Tank playerTank, ArrayList<TreeObstacle> treeObstacles, ArrayList<Tank> tanks, ArrayList<Bullet> bullets, Level level, AI ai, LevelRenderer levelRenderer) {
         this.playerTank = playerTank;
         this.treeObstacles = treeObstacles;
         this.tanks = tanks;
         //this.bullets = bullets;
 
         this.controlForPlayer = new ControlForPlayer();
+        this.controlForPlayer.subscribe(levelRenderer);
         this.controlForBots = new ControlForBots();
         this.tankAIController = new TankAIController(ai, playerTank, treeObstacles, tanks, width, height);
 

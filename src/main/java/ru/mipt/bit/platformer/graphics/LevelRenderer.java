@@ -31,38 +31,38 @@ public class LevelRenderer implements Subscriber {
     private final Texture blueTankTexture;
     private final Texture greenTreeTexture;
     private final Texture bulletTexture;
-    private final TankGraphics tankPlayerGraphics;
-    private final HashMap<Tank, TankGraphics> tanksToGraphics;
+    private final Texture healthTexture;
+    private final ObjectGraphics tankPlayerGraphics;
+    private final HashMap<Tank, ObjectGraphics> tanksToGraphics;
     private final HashMap<TreeObstacle, TreeObstacleGraphics> treesToGraphics;
     private final HashMap<Bullet, BulletGraphics> bulletsToGraphics;
     
     private final Tank playerTank;
-    private final ArrayList<TreeObstacle> treeObstacles;
-    private final ArrayList<Tank> tanks;
-    private final ArrayList<Bullet> bullets;
 
-    public LevelRenderer(TiledMap level, TiledMapTileLayer groundLayer, Tank playerTank, ArrayList<TreeObstacle> treeObstacles, ArrayList<Tank> tanks, ArrayList<Bullet> bullets) {
+    public LevelRenderer(TiledMap level, TiledMapTileLayer groundLayer, Tank playerTank, ArrayList<TreeObstacle> treeObstacles, ArrayList<Tank> tanks) {
         this.batch = new SpriteBatch();
         this.levelRenderer = createSingleLayerMapRenderer(level, batch);
         this.groundLayer = groundLayer;
         this.tileMovement = new TileMovement(groundLayer, Interpolation.smooth);
 
         this.blueTankTexture = new Texture("images/tank_blue.png");
-        this.tankPlayerGraphics = new TankGraphics(blueTankTexture, this.tileMovement);
         this.greenTreeTexture = new Texture("images/greenTree.png");
         this.bulletTexture = new Texture("images/bullet_square.png");
+        this.healthTexture = new Texture("images/health.png");
+
+        TankGraphics tankGraphics = new TankGraphics(blueTankTexture, this.tileMovement);
+        this.tankPlayerGraphics = new TankWithHealthGraphics(tankGraphics, playerTank, healthTexture, this.tileMovement);
         this.treesToGraphics = new HashMap<>();
         for (var tree : treeObstacles)
             treesToGraphics.put(tree, new TreeObstacleGraphics(greenTreeTexture, this.tileMovement));
         this.tanksToGraphics = new HashMap<>();
-        for (var tank : tanks)
-            tanksToGraphics.put(tank, new TankGraphics(blueTankTexture, this.tileMovement));
+        for (var tank : tanks) {
+            tankGraphics = new TankGraphics(blueTankTexture, this.tileMovement);
+            tanksToGraphics.put(tank, new TankWithHealthGraphics(tankGraphics, tank, healthTexture, this.tileMovement));
+        }
         this.bulletsToGraphics = new HashMap<>();
 
         this.playerTank = playerTank;
-        this.treeObstacles = treeObstacles;
-        this.tanks = tanks;
-        this.bullets = bullets;
     }
 
     private TileMovement getTileMovement() {
@@ -154,19 +154,34 @@ public class LevelRenderer implements Subscriber {
                 bulletsToGraphics.put((Bullet) gameObject, new BulletGraphics(bulletTexture, tileMovement));
                 break;
             case RemoveBullet:
+                System.out.println("before remove bullet " + bulletsToGraphics.entrySet().size());
+                Bullet removable = null;
                 for (var entry : bulletsToGraphics.entrySet()) {
                     if (entry.getKey() == gameObject) {
-                        bulletsToGraphics.remove(entry.getKey(), entry.getValue());
+                        removable = entry.getKey();
+                        //bulletsToGraphics.remove(entry.getKey());
+                        break;
+                    }
+                }
+                if (removable != null) {
+                    System.out.println("after remove bullet " + bulletsToGraphics.entrySet().size());
+                    bulletsToGraphics.remove(removable);
+                }
+                break;
+            case RemoveTank:
+                System.out.println("before remove tank " + tanksToGraphics.entrySet().size());
+                for (var entry : tanksToGraphics.entrySet()) {
+                    if (entry.getKey() == gameObject) {
+                        tanksToGraphics.remove(entry.getKey(), entry.getValue());
+                        System.out.println("after remove tank " + tanksToGraphics.entrySet().size());
                         break;
                     }
                 }
                 break;
-            case RemoveTank:
+            case ChangeHealth:
+                tankPlayerGraphics.changeHealthBar();
                 for (var entry : tanksToGraphics.entrySet()) {
-                    if (entry.getKey() == gameObject) {
-                        tanksToGraphics.remove(entry.getKey(), entry.getValue());
-                        break;
-                    }
+                    entry.getValue().changeHealthBar();
                 }
                 break;
         }
