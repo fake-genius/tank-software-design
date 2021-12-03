@@ -3,6 +3,9 @@ package ru.mipt.bit.platformer.AIControl.creators;
 import org.awesome.ai.state.movable.Player;
 import ru.mipt.bit.platformer.gameobjects.Tank;
 
+/**
+ * Adapter
+ */
 public class PlayerCreator {
     public Player createPlayer(Tank tank, OrientationCreator orientationCreator) {
         return new Player.PlayerBuilder()

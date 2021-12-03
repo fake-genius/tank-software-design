@@ -3,6 +3,9 @@ package ru.mipt.bit.platformer.AIControl.creators;
 import org.awesome.ai.state.movable.Bot;
 import ru.mipt.bit.platformer.gameobjects.Tank;
 
+/**
+ * Adapter
+ */
 public class BotCreator {
     public Bot createBot(Tank tank, OrientationCreator orientationCreator) {
         return new Bot.BotBuilder()

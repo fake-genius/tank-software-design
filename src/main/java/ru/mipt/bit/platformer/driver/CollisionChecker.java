@@ -10,6 +10,9 @@ import ru.mipt.bit.platformer.observer.Subscriber;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter
+ */
 public class CollisionChecker implements Subscriber {
 
     private final int width = 10;

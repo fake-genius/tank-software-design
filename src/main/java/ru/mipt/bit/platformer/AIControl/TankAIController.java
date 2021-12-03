@@ -11,6 +11,9 @@ import ru.mipt.bit.platformer.gameobjects.TreeObstacle;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Use case
+ */
 public class TankAIController {
     private final AI ai;
     private GameState gameState;

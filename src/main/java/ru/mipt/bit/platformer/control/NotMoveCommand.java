@@ -1,8 +1,10 @@
 package ru.mipt.bit.platformer.control;
 
-import ru.mipt.bit.platformer.driver.CollisionChecker;
 import ru.mipt.bit.platformer.gameobjects.Tank;
 
+/**
+ * Use case
+ */
 public class NotMoveCommand implements Command {
     private final Tank tank;
 

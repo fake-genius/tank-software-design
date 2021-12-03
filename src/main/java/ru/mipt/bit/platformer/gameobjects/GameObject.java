@@ -1,5 +1,8 @@
 package ru.mipt.bit.platformer.gameobjects;
 
+/**
+ * Entity
+ */
 public interface GameObject {
 
     @Override

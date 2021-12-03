@@ -10,6 +10,9 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 
+/**
+ * Use case
+ */
 public class FileReader implements LevelGenerator {
     private final int width = 10;
     private final int height = 8;

@@ -4,6 +4,9 @@ import com.badlogic.gdx.math.GridPoint2;
 
 import java.util.Objects;
 
+/**
+ * Entity
+ */
 public class TreeObstacle implements GameObject {
     private final GridPoint2 treeObstacleCoordinates;
 

@@ -2,10 +2,12 @@ package ru.mipt.bit.platformer.AIControl;
 
 import org.awesome.ai.Action;
 import org.awesome.ai.Recommendation;
-import org.awesome.ai.state.movable.Orientation;
 import ru.mipt.bit.platformer.control.*;
 import ru.mipt.bit.platformer.gameobjects.Tank;
 
+/**
+ * Adapter
+ */
 public class CommandFromRecommendation {
     Command getCommand(Recommendation recommendation) {
         Tank actor = (Tank) recommendation.getActor().getSource();

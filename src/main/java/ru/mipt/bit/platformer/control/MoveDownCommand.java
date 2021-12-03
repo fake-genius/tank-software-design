@@ -4,8 +4,9 @@ import com.badlogic.gdx.math.GridPoint2;
 import ru.mipt.bit.platformer.Direction;
 import ru.mipt.bit.platformer.gameobjects.Tank;
 
-import static ru.mipt.bit.platformer.util.GdxGameUtils.decrementedY;
-
+/**
+ * Use case
+ */
 public class MoveDownCommand implements Command {
 
     private final Tank tank;

@@ -3,6 +3,9 @@ package ru.mipt.bit.platformer.AIControl.creators;
 import com.badlogic.gdx.math.GridPoint2;
 import org.awesome.ai.state.movable.Orientation;
 
+/**
+ * Adapter
+ */
 public class OrientationCreator {
     public Orientation createOrientation(GridPoint2 coordinates, GridPoint2 destinationCoordinates) {
         int deltaX = destinationCoordinates.x - coordinates.x;

@@ -9,6 +9,9 @@ import ru.mipt.bit.platformer.gameobjects.TreeObstacle;
 
 import java.util.ArrayList;
 
+/**
+ * Adapter
+ */
 public class GameStateCreator {
     public GameState createGameState(Tank playerTank, ArrayList<TreeObstacle> treeObstacles, ArrayList<Tank> tanks, int levelWidth, int levelHeight) {
         GameState.GameStateBuilder gameStateBuilder = new GameState.GameStateBuilder();

@@ -15,6 +15,9 @@ import java.util.Date;
 
 import static com.badlogic.gdx.Input.Keys.*;
 
+/**
+ * Use case
+ */
 public class ControlForPlayer implements Publisher {
 
     private final ArrayList<Subscriber> subscribers = new ArrayList<>();
