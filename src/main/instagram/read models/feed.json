@@ -1,0 +1,15 @@
+{
+  "Get Feed": {
+    "Запрос клиента": {
+      "get feed": {
+        "userId": "int",
+        "date": "date"
+      }
+    },
+    "Ответ сервера": {
+      "response": {
+        "posts": "Post[]"
+      }
+    }
+  }
+}

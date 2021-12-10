@@ -1,0 +1,17 @@
+{
+  "Make Post": {
+    "Запрос клиента": {
+      "make post": {
+        "userId": "int",
+        "image": "image",
+        "postText": "string",
+        "date": "date"
+      }
+    },
+    "Ответ сервера": {
+      "response": {
+        "statusCode": "int"
+      }
+    }
+  }
+}
