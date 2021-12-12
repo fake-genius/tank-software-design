@@ -1,0 +1,16 @@
+{
+  "Get Comments": {
+    "Запрос клиента": {
+      "like": {
+        "userId": "int",
+        "postId": "int",
+        "date": "date"
+      }
+    },
+    "Ответ сервера": {
+      "response": {
+        "comments": "Comment[]"
+      }
+    }
+  }
+}

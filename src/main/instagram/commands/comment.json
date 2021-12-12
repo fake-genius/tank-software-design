@@ -1,0 +1,17 @@
+{
+  "Make Comment": {
+    "Запрос клиента": {
+      "make comment": {
+        "userId": "int",
+        "postId": "int",
+        "commentText": "string",
+        "date": "date"
+      }
+    },
+    "Ответ сервера": {
+      "response": {
+        "statusCode": "int"
+      }
+    }
+  }
+}
