@@ -61,14 +61,8 @@ public class Level implements Publisher {
     }
 
     public void checkObjects() {
-        checkPlayer();
         checkTanks();
         checkBullets();
-    }
-
-    public void checkPlayer() {
-        //if (!playerTank.isAlive())
-            //System.out.println("Player died!");
     }
 
     public void checkTanks() {

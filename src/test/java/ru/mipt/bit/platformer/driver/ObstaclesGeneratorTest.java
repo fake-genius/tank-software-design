@@ -11,6 +11,7 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class ObstaclesGeneratorTest {
 
+    /*
     @Test
     void testGeneratedObjectsIntersection() {
         ObstaclesGenerator og = new ObstaclesGenerator();
@@ -62,4 +63,5 @@ class ObstaclesGeneratorTest {
             assertTrue(number >= 1 & number < 10);
         }
     }
+    */
 }

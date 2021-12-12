@@ -27,29 +27,12 @@ public class ShootCommand implements Command {
         if (!tank.canShoot())
             return;
 
-        GridPoint2 bulletCoords = getNextCoords();
+        GridPoint2 bulletCoords = tank.getNextCoords();
         Bullet bullet = new Bullet(bulletCoords, tank.getRotation(), tank.getCollisionChecker(), tank);
 
         if (bullet.checkCollisions(bulletCoords)) {
             level.addBullet(bullet);
         }
         tank.setLastTimeShooting(new Date().getTime());
-    }
-
-
-    private GridPoint2 getNextCoords() {
-        GridPoint2 coords = tank.getCoordinates();
-        GridPoint2 destCoords;
-        float rotation = tank.getRotation();
-
-        if (rotation == 90.0)
-            destCoords = incrementedY(coords);
-        else if (rotation == -180.0)
-            destCoords = decrementedX(coords);
-        else if (rotation == -90.0)
-            destCoords = decrementedY(coords);
-        else
-            destCoords = incrementedX(coords);
-        return destCoords;
     }
 }

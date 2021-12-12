@@ -1,5 +1,6 @@
 package ru.mipt.bit.platformer.gameobjects.state;
 
+import ru.mipt.bit.platformer.gameobjects.Bullet;
 import ru.mipt.bit.platformer.gameobjects.Tank;
 
 /**
@@ -16,5 +17,10 @@ public class SevereDamagedState implements State {
     @Override
     public boolean canShoot() {
         return false;
+    }
+
+    @Override
+    public void takeDamage(Bullet bullet) {
+        tank.kill();
     }
 }

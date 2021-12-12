@@ -19,16 +19,18 @@ public class FileReader implements LevelGenerator {
     private Tank playerTank;
     private final ArrayList<Tank> tanks;
     private final ArrayList<TreeObstacle> trees;
+    private final String filePath;
 
     private final CollisionChecker collisionChecker;
 
-    public FileReader() {
+    public FileReader(String filePath) {
+        this.filePath = filePath;
         tanks = new ArrayList<>();
         trees = new ArrayList<>();
         collisionChecker = new CollisionChecker();
     }
 
-    public String readFromFileToString(String filePath) {
+    private String readFromFileToString() {
         try {
             Path fileName = Path.of(filePath);
             return Files.readString(fileName);
@@ -50,12 +52,12 @@ public class FileReader implements LevelGenerator {
         return trees;
     }
 
-    public void getGameObjectsFromFile(String filePath) {
-        String fileData = readFromFileToString(filePath);
+    private void getGameObjectsFromFile() {
+        String fileData = readFromFileToString();
         getObjectsFromString(fileData);
     }
 
-    public void getObjectsFromString(String fileContent) {
+    private void getObjectsFromString(String fileContent) {
         // предполагается, что в файле нет лишних клеток
         int i = 0;
         char symbol;
@@ -93,6 +95,7 @@ public class FileReader implements LevelGenerator {
 
     @Override
     public Level generateLevel() {
+        getGameObjectsFromFile();
         return new Level(playerTank, trees, tanks);
     }
 }

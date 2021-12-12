@@ -37,7 +37,7 @@ public class ObstaclesGenerator implements LevelGenerator {
         this.obstaclesNumber = obstaclesNumber;
     }
 
-    public Tank generatePlayer() {
+    private Tank generatePlayer() {
         int randomWidth = generateNumber(0, width);
         int randomHeight = generateNumber(0, height);
         GridPoint2 coords = new GridPoint2(randomWidth, randomHeight);
@@ -52,7 +52,7 @@ public class ObstaclesGenerator implements LevelGenerator {
         return playerTank;
     }
 
-    public ArrayList<TreeObstacle> generateObstacles(int obstaclesNumber) {
+    private ArrayList<TreeObstacle> generateObstacles(int obstaclesNumber) {
         int randomWidth = generateNumber(0, width);
         int randomHeight = generateNumber(0, height);
         GridPoint2 coords = new GridPoint2(randomWidth, randomHeight);
@@ -70,7 +70,7 @@ public class ObstaclesGenerator implements LevelGenerator {
         return obstacles;
     }
 
-    public ArrayList<Tank> generateTanks(int tanksNumber) {
+    private ArrayList<Tank> generateTanks(int tanksNumber) {
         int randomWidth = generateNumber(0, width);
         int randomHeight = generateNumber(0, height);
         GridPoint2 coords = new GridPoint2(randomWidth, randomHeight);
@@ -88,7 +88,7 @@ public class ObstaclesGenerator implements LevelGenerator {
         return tanks;
     }
 
-    public int generateNumber(int from, int to) {
+    private int generateNumber(int from, int to) {
         return ThreadLocalRandom.current().nextInt(from, to);
     }
 

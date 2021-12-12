@@ -36,14 +36,9 @@ public class CollisionChecker implements Subscriber {
         treeObstacles.add(treeObstacle);
     }
 
-    public void addBullet(Bullet bullet) {
-        bullets.add(bullet);
-    }
-
     public boolean checkCollisionsWithBullet(GridPoint2 newPosition, Bullet bullet) {
         if (!checkBounds(newPosition)) {
             bullet.setNotExistent();
-            //bullets.remove(bullet);
             return false;
         }
 
@@ -58,8 +53,6 @@ public class CollisionChecker implements Subscriber {
             if (!bulletToMove.isMovementPossible(bullet.getCoordinates(), newPosition) || !bulletToMove.isMovementPossible(bullet.getDestinationCoordinates(), newPosition)) {
                 bullet.setNotExistent();
                 bulletToMove.setNotExistent();
-                //bullets.remove(bullet);
-                //bullets.remove(bulletToMove);
                 return false;
             }
         }
@@ -70,10 +63,7 @@ public class CollisionChecker implements Subscriber {
         for (var tank : tanks) {
             if (!tank.equals(bullet.getTank()) && (!bullet.isMovementPossible(tank.getCoordinates(), newPosition) || !bullet.isMovementPossible(tank.getDestinationCoordinates(), newPosition)) ) {
                 bullet.setNotExistent();
-                //bullets.remove(bullet);
                 tank.takeDamage(bullet);
-                //if (!tank.isAlive())
-                    //tanks.remove(tank);
                 return false;
             }
         }
@@ -84,7 +74,6 @@ public class CollisionChecker implements Subscriber {
         for (var tree : treeObstacles) {
             if (!bullet.isMovementPossible(tree.getCoordinates(), newPosition)) {
                 bullet.setNotExistent();
-                //bullets.remove(bullet);
                 return false;
             }
         }

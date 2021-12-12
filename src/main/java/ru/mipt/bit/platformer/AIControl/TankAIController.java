@@ -5,6 +5,8 @@ import org.awesome.ai.Recommendation;
 import org.awesome.ai.state.GameState;
 import ru.mipt.bit.platformer.AIControl.creators.GameStateCreator;
 import ru.mipt.bit.platformer.control.Command;
+import ru.mipt.bit.platformer.control.Controller;
+import ru.mipt.bit.platformer.driver.Level;
 import ru.mipt.bit.platformer.gameobjects.Tank;
 import ru.mipt.bit.platformer.gameobjects.TreeObstacle;
 
@@ -14,7 +16,7 @@ import java.util.List;
 /**
  * Use case
  */
-public class TankAIController {
+public class TankAIController implements Controller {
     private final AI ai;
     private GameState gameState;
     private final ArrayList<Command> tanksCommands;
@@ -38,16 +40,10 @@ public class TankAIController {
         this.tanksCommands = new ArrayList<>();
     }
 
-    public ArrayList<Command> getCommands() {
+    @Override
+    public ArrayList<Command> getCommands(ArrayList<Tank> tank, Level level) {
         recommendCommands();
         return tanksCommands;
-    }
-
-    public void executeCommands() {
-        recommendCommands();
-        for (Command command : tanksCommands) {
-            command.execute();
-        }
     }
 
     public void createGameState() {

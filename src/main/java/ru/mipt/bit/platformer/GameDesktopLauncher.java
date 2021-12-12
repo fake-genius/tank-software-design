@@ -31,11 +31,6 @@ public class GameDesktopLauncher implements ApplicationListener {
     private TileMovement tileMovement;
     private LevelRenderer levelRenderer;
 
-    private Tank playerTank;
-    private ArrayList<Tank> tanks;
-    private ArrayList<TreeObstacle> treeObstacles;
-    private ArrayList<Bullet> bullets;
-
     private GameDriver gameDriver;
 
     private Level level;
@@ -43,20 +38,11 @@ public class GameDesktopLauncher implements ApplicationListener {
     private void generateRandomLevel() {
         ObstaclesGenerator obstaclesGenerator = new ObstaclesGenerator(3, 10);
         level = obstaclesGenerator.generateLevel();
-        playerTank = level.getPlayerTank();
-        tanks = level.getTanks();
-        treeObstacles = level.getTreeObstacles();
-        bullets = level.getBullets();
     }
 
     private void getLevelFromFile() {
-        FileReader fileReader = new FileReader();
-        fileReader.getGameObjectsFromFile("src\\test\\resources\\test_level.txt");
+        FileReader fileReader = new FileReader("src\\test\\resources\\test_level.txt");
         level = fileReader.generateLevel();
-        playerTank = level.getPlayerTank();
-        tanks = level.getTanks();
-        treeObstacles = level.getTreeObstacles();
-        bullets = level.getBullets();
     }
 
     @Override
@@ -66,13 +52,13 @@ public class GameDesktopLauncher implements ApplicationListener {
 
         levelTiledMap = new TmxMapLoader().load("level.tmx");
         TiledMapTileLayer groundLayer = getSingleLayer(levelTiledMap);
-        levelRenderer = new LevelRenderer(levelTiledMap, groundLayer, playerTank, treeObstacles, tanks);
+        levelRenderer = new LevelRenderer(levelTiledMap, groundLayer, level.getPlayerTank(), level.getTreeObstacles(), level.getTanks());
         tileMovement = new TileMovement(groundLayer, Interpolation.smooth);
 
-        gameDriver = new GameDriver(playerTank, treeObstacles, tanks, bullets, level, new NotRecommendingAI(), levelRenderer);
+        gameDriver = new GameDriver(level, new NotRecommendingAI(), levelRenderer);
         level.subscribe(gameDriver);
         level.subscribe(levelRenderer);
-        level.subscribe(playerTank.getCollisionChecker());
+        level.subscribe(level.getPlayerTank().getCollisionChecker());
 
         levelRenderer.moveRectangleAtTileCenter();
     }

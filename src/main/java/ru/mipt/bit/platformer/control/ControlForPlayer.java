@@ -11,6 +11,7 @@ import ru.mipt.bit.platformer.observer.Publisher;
 import ru.mipt.bit.platformer.observer.Subscriber;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Date;
 
 import static com.badlogic.gdx.Input.Keys.*;
@@ -18,34 +19,40 @@ import static com.badlogic.gdx.Input.Keys.*;
 /**
  * Use case
  */
-public class ControlForPlayer implements Publisher {
+public class ControlForPlayer implements Publisher, Controller {
 
     private final ArrayList<Subscriber> subscribers = new ArrayList<>();
     private long lastTimeChanged =  new Date().getTime();
 
-    public Command processKey(Tank tank, Level level) {
+    @Override
+    public ArrayList<Command> getCommands(ArrayList<Tank> tanks, Level level) {
+        Tank tank = tanks.get(0);
+        ArrayList<Command> commands = new ArrayList<>();
         if (Gdx.input.isKeyPressed(UP) || Gdx.input.isKeyPressed(W)) {
-            return new MoveUpCommand(tank);
+            commands.add(new MoveUpCommand(tank));
         }
         else if (Gdx.input.isKeyPressed(LEFT) || Gdx.input.isKeyPressed(A)) {
-            return new MoveLeftCommand(tank);
+            commands.add(new MoveLeftCommand(tank));
         }
         else if (Gdx.input.isKeyPressed(DOWN) || Gdx.input.isKeyPressed(S)) {
-            return new MoveDownCommand(tank);
+            commands.add(new MoveDownCommand(tank));
         }
         else if (Gdx.input.isKeyPressed(RIGHT) || Gdx.input.isKeyPressed(D)) {
-            return new MoveRightCommand(tank);
+            commands.add(new MoveRightCommand(tank));
         }
         else if (Gdx.input.isKeyPressed(SPACE)) {
-            return new ShootCommand(tank, level);
+            commands.add(new ShootCommand(tank, level));
         } else if (Gdx.input.isKeyPressed(L)) {
             long time = new Date().getTime();
             if (time - lastTimeChanged > 300) {
                 notifySubs(Event.ChangeHealth, null);
                 lastTimeChanged = time;
             }
+            commands.add(new NotMoveCommand(tank));
+        } else {
+            commands.add(new NotMoveCommand(tank));
         }
-        return new NotMoveCommand(tank);
+        return commands;
     }
 
     @Override

@@ -57,7 +57,7 @@ public class Bullet implements GameObject{
         return this.movementProgress;
     }
 
-    public float getDamage() {
+    public int getDamage() {
         return damage;
     }
 
